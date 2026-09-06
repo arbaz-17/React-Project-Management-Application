@@ -4,11 +4,11 @@ function TaskDetailsPage() {
   const { projectId, taskId } = useParams()
 
   return (
-    <main>
-      <h1>Task Details</h1>
+    <section className="page">
+      <h2>Task Details</h2>
       <p>Project ID: {projectId}</p>
       <p>Task ID: {taskId}</p>
-    </main>
+    </section>
   )
 }
 

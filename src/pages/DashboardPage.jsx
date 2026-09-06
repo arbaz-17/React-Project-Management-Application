@@ -1,9 +1,9 @@
 function DashboardPage() {
   return (
-    <main>
-      <h1>Dashboard</h1>
+    <section className="page">
+      <h2>Dashboard</h2>
       <p>Welcome to your project management dashboard.</p>
-    </main>
+    </section>
   )
 }
 

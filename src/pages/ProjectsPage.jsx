@@ -1,9 +1,9 @@
 function ProjectsPage() {
   return (
-    <main>
-      <h1>Projects</h1>
+    <section className="page">
+      <h2>Projects</h2>
       <p>Your projects will appear here.</p>
-    </main>
+    </section>
   )
 }
 
