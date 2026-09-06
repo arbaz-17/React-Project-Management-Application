@@ -3,7 +3,6 @@ import { useState } from 'react'
 import Button from '../../../components/ui/Button'
 import Input from '../../../components/ui/Input'
 import Textarea from '../../../components/ui/Textarea'
-
 import { validateProject } from '../../../utils/projectValidation.js'
 
 function ProjectForm({
@@ -16,12 +15,10 @@ function ProjectForm({
     name: initialValues?.name ?? '',
     description: initialValues?.description ?? '',
   })
-
   const [errors, setErrors] = useState({})
 
   function handleChange(event) {
     const { name, value } = event.target
-
     setValues((current) => ({
       ...current,
       [name]: value,
@@ -30,9 +27,7 @@ function ProjectForm({
 
   function handleSubmit(event) {
     event.preventDefault()
-
     const validationErrors = validateProject(values)
-
     setErrors(validationErrors)
 
     if (Object.keys(validationErrors).length > 0) {
@@ -46,10 +41,7 @@ function ProjectForm({
   }
 
   return (
-    <form
-      className="project-form"
-      onSubmit={handleSubmit}
-    >
+    <form className="project-form" onSubmit={handleSubmit}>
       <Input
         id="project-name"
         label="Project Name"
@@ -73,13 +65,9 @@ function ProjectForm({
       />
 
       <div className="project-form-actions">
-        <Button
-          variant="secondary"
-          onClick={onCancel}
-        >
+        <Button variant="secondary" onClick={onCancel}>
           Cancel
         </Button>
-
         <Button type="submit">
           {submitLabel}
         </Button>

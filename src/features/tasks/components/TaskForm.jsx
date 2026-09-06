@@ -4,49 +4,22 @@ import Button from '../../../components/ui/Button'
 import Input from '../../../components/ui/Input'
 import Select from '../../../components/ui/Select'
 import Textarea from '../../../components/ui/Textarea'
-
 import { validateTask } from '../utils/taskValidation'
 
 const statusOptions = [
-  {
-    value: 'BACKLOG',
-    label: 'Backlog',
-  },
-  {
-    value: 'TODO',
-    label: 'To Do',
-  },
-  {
-    value: 'IN_PROGRESS',
-    label: 'In Progress',
-  },
-  {
-    value: 'DONE',
-    label: 'Done',
-  },
+  { value: 'BACKLOG', label: 'Backlog' },
+  { value: 'TODO', label: 'To Do' },
+  { value: 'IN_PROGRESS', label: 'In Progress' },
+  { value: 'DONE', label: 'Done' },
 ]
 
 const priorityOptions = [
-  {
-    value: 'LOW',
-    label: 'Low',
-  },
-  {
-    value: 'MEDIUM',
-    label: 'Medium',
-  },
-  {
-    value: 'HIGH',
-    label: 'High',
-  },
+  { value: 'LOW', label: 'Low' },
+  { value: 'MEDIUM', label: 'Medium' },
+  { value: 'HIGH', label: 'High' },
 ]
 
-function TaskForm({
-  initialValues,
-  onSubmit,
-  onCancel,
-  submitLabel = 'Create Task',
-}) {
+function TaskForm({ initialValues, onSubmit, onCancel, submitLabel = 'Create Task' }) {
   const [values, setValues] = useState({
     title: initialValues?.title ?? '',
     description: initialValues?.description ?? '',
@@ -60,7 +33,6 @@ function TaskForm({
 
   function handleChange(event) {
     const { name, value } = event.target
-
     setValues((current) => ({
       ...current,
       [name]: value,
@@ -69,14 +41,10 @@ function TaskForm({
 
   function handleSubmit(event) {
     event.preventDefault()
-
     const validationErrors = validateTask(values)
-
     setErrors(validationErrors)
 
-    if (Object.keys(validationErrors).length > 0) {
-      return
-    }
+    if (Object.keys(validationErrors).length > 0) return
 
     onSubmit({
       title: values.title.trim(),
@@ -89,10 +57,7 @@ function TaskForm({
   }
 
   return (
-    <form
-      className="task-form"
-      onSubmit={handleSubmit}
-    >
+    <form className="task-form" onSubmit={handleSubmit}>
       <Input
         id="task-title"
         name="title"
@@ -161,14 +126,10 @@ function TaskForm({
         />
       </div>
 
-      <div className="project-form-actions">
-        <Button
-          variant="secondary"
-          onClick={onCancel}
-        >
+      <div className="form-actions">
+        <Button variant="secondary" onClick={onCancel}>
           Cancel
         </Button>
-
         <Button type="submit">
           {submitLabel}
         </Button>

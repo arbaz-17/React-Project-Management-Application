@@ -1,15 +1,8 @@
 import Button from '../../../components/ui/Button'
 import Modal from '../../../components/ui/Modal'
 
-function DeleteProjectModal({
-  project,
-  isOpen,
-  onClose,
-  onConfirm,
-}) {
-  if (!project) {
-    return null
-  }
+function DeleteProjectModal({ project, isOpen, onClose, onConfirm }) {
+  if (!project) return null
 
   return (
     <Modal
@@ -19,26 +12,17 @@ function DeleteProjectModal({
       size="small"
     >
       <p className="delete-project-message">
-        Are you sure you want to delete{' '}
-        <strong>{project.name}</strong>?
+        Are you sure you want to delete <strong>{project.name}</strong>?
       </p>
-
       <p className="delete-project-warning">
         This action cannot be undone.
       </p>
 
       <div className="project-form-actions">
-        <Button
-          variant="secondary"
-          onClick={onClose}
-        >
+        <Button variant="secondary" onClick={onClose}>
           Cancel
         </Button>
-
-        <Button
-          variant="danger"
-          onClick={() => onConfirm(project.id)}
-        >
+        <Button variant="danger" onClick={() => onConfirm(project.id)}>
           Delete Project
         </Button>
       </div>

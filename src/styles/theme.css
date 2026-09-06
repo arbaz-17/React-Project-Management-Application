@@ -1,0 +1,103 @@
+/* =========================
+   1. theme.css
+   The "Eclipse" System - Variables & Theming
+   ========================= */
+
+:root {
+  /* Typography */
+  --font-family-base: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  /* Brand Colors (The Orange Anchor) */
+  --accent-primary: #f97316;
+  --accent-hover: #ea580c;
+  --accent-light: #ffedd5;
+  --accent-muted: #fdba74;
+
+  /* Light Theme - Backgrounds */
+  --bg-main: #f5f7fa;
+  --bg-surface: #ffffff;
+  --bg-surface-hover: #f3f4f6;
+  --bg-overlay: rgba(0, 0, 0, 0.45);
+
+  /* Light Theme - Borders & Dividers */
+  --border-light: #e5e7eb;
+  --border-medium: #d1d5db;
+  --border-focus: rgba(249, 115, 22, 0.25);
+
+  /* Light Theme - Text */
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-inverse: #ffffff;
+
+  /* Light Theme - Status Colors */
+  --color-success-bg: #dcfce7;
+  --color-success-text: #166534;
+  
+  --color-danger-bg: #fee2e2;
+  --color-danger-text: #991b1b;
+  --color-danger-main: #dc2626;
+  --color-danger-hover: #b91c1c;
+  
+  --color-warning-bg: #fef3c7;
+  --color-warning-text: #92400e;
+  
+  --color-info-bg: #dbeafe;
+  --color-info-text: #1e40af;
+
+  /* UI Geometry & Animation */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-full: 9999px;
+  
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-modal: 0 20px 40px rgba(0, 0, 0, 0.15);
+  
+  --transition-base: 150ms ease;
+}
+
+/* Dark Theme Overrides */
+[data-theme="dark"] {
+  /* Brand Colors (Slightly brightened hover for dark contrast) */
+  --accent-primary: #f97316;
+  --accent-hover: #fb923c;
+  --accent-light: #431407;
+  
+  /* Dark Theme - Backgrounds */
+  --bg-main: #0a0a0a;
+  --bg-surface: #171717;
+  --bg-surface-hover: #27272a;
+  --bg-overlay: rgba(0, 0, 0, 0.75);
+
+  /* Dark Theme - Borders & Dividers */
+  --border-light: #27272a;
+  --border-medium: #3f3f46;
+  --border-focus: rgba(249, 115, 22, 0.4);
+
+  /* Dark Theme - Text */
+  --text-primary: #f8fafc;
+  --text-secondary: #a1a1aa;
+  --text-inverse: #111827;
+
+  /* Dark Theme - Status Colors */
+  --color-success-bg: #052e16;
+  --color-success-text: #86efac;
+  
+  --color-danger-bg: #450a0a;
+  --color-danger-text: #fca5a5;
+  --color-danger-main: #ef4444;
+  --color-danger-hover: #f87171;
+  
+  --color-warning-bg: #451a03;
+  --color-warning-text: #fde047;
+  
+  --color-info-bg: #1e3a8a;
+  --color-info-text: #93c5fd;
+
+  /* Dark Theme - Shadows (Deepened for dark mode) */
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  --shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.75);
+}

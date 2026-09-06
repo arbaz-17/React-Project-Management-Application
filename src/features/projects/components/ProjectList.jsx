@@ -1,12 +1,7 @@
 import EmptyState from '../../../components/ui/EmptyState'
-
 import ProjectCard from './ProjectCard'
 
-function ProjectList({
-  projects,
-  onEdit,
-  onDelete,
-}) {
+function ProjectList({ projects, onEdit, onDelete }) {
   if (projects.length === 0) {
     return (
       <EmptyState

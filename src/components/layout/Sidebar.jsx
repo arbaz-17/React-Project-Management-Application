@@ -15,7 +15,10 @@ function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="sidebar-brand">
-        <h2>Mini Jira</h2>
+        <h2>
+          <span className="brand-accent"></span>
+          Mini Jira
+        </h2>
       </div>
 
       <nav className="sidebar-nav" aria-label="Main navigation">

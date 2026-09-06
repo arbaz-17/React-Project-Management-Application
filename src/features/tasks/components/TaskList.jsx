@@ -1,12 +1,7 @@
 import EmptyState from '../../../components/ui/EmptyState'
-
 import TaskCard from './TaskCard'
 
-function TaskList({
-  tasks,
-  onEdit,
-  onDelete,
-}) {
+function TaskList({ tasks, onEdit, onDelete }) {
   if (tasks.length === 0) {
     return (
       <EmptyState

@@ -9,7 +9,6 @@ import BoardColumn from '../features/board/components/BoardColumn'
 import DeleteTaskModal from '../features/tasks/components/DeleteTaskModal'
 import TaskForm from '../features/tasks/components/TaskForm'
 import initialTasks from '../features/tasks/data/initialTasks'
-
 import initialProjects from '../features/projects/data/initialProjects'
 import { getProjectById } from '../features/projects/utils/projectUtils'
 
@@ -22,7 +21,6 @@ const columns = [
 
 function ProjectBoardPage() {
   const { projectId } = useParams()
-
   const project = getProjectById(initialProjects, projectId)
 
   const [tasks, setTasks] = useState(() =>
@@ -35,7 +33,6 @@ function ProjectBoardPage() {
 
   function handleCreateTask(values) {
     const now = new Date().toISOString()
-
     const newTask = {
       id: crypto.randomUUID(),
       projectId,
@@ -60,15 +57,11 @@ function ProjectBoardPage() {
           : task,
       ),
     )
-
     setEditingTask(null)
   }
 
   function handleDeleteTask(taskId) {
-    setTasks((current) =>
-      current.filter((task) => task.id !== taskId),
-    )
-
+    setTasks((current) => current.filter((task) => task.id !== taskId))
     setDeletingTask(null)
   }
 
@@ -81,11 +74,8 @@ function ProjectBoardPage() {
       <section className="page">
         <h2>Project Not Found</h2>
         <p>The project you're looking for doesn't exist.</p>
-
-        <Link
-          to="/projects"
-          className="button button-primary button-medium"
-        >
+        <br />
+        <Link to="/projects" className="button button-primary button-medium">
           Back to Projects
         </Link>
       </section>
@@ -99,14 +89,12 @@ function ProjectBoardPage() {
           <Link to="/projects" className="project-back-link">
             ← Back to Projects
           </Link>
-
           <h2>{project.name}</h2>
           <p>{project.description}</p>
         </div>
 
         <div className="project-board-header-actions">
           <Badge variant="info">Project Board</Badge>
-
           <Button onClick={() => setIsCreateModalOpen(true)}>
             + Add Task
           </Button>
