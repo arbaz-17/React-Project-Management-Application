@@ -11,11 +11,7 @@ const priorityVariants = {
   HIGH: 'danger',
 }
 
-function TaskCard({
-  task,
-  onEdit,
-  onDelete,
-}) {
+function TaskCard({ task, onEdit, onDelete }) {
   return (
     <Card className="task-card">
       <div className="task-card-header">
@@ -27,7 +23,6 @@ function TaskCard({
             {task.title}
           </Link>
         </div>
-
         <Badge variant={priorityVariants[task.priority]}>
           {task.priority}
         </Badge>
@@ -41,35 +36,20 @@ function TaskCard({
 
       <div className="task-card-meta">
         <div className="task-assignee">
-          <Avatar
-            name={task.assignee}
-            size="small"
-          />
-
+          <Avatar name={task.assignee} size="small" />
           <span>{task.assignee}</span>
         </div>
 
         {task.dueDate && (
-          <span className="task-due-date">
-            Due {task.dueDate}
-          </span>
+          <span className="task-due-date">Due {task.dueDate}</span>
         )}
       </div>
 
       <div className="task-card-actions">
-        <Button
-          variant="secondary"
-          size="small"
-          onClick={() => onEdit(task)}
-        >
+        <Button variant="secondary" size="small" onClick={() => onEdit(task)}>
           Edit
         </Button>
-
-        <Button
-          variant="danger"
-          size="small"
-          onClick={() => onDelete(task)}
-        >
+        <Button variant="danger" size="small" onClick={() => onDelete(task)}>
           Delete
         </Button>
       </div>

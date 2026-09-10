@@ -11,19 +11,12 @@ import initialProjects from '../features/projects/data/initialProjects'
 
 function ProjectsPage() {
   const [projects, setProjects] = useState(initialProjects)
-
-  const [isCreateModalOpen, setIsCreateModalOpen] =
-    useState(false)
-
-  const [editingProject, setEditingProject] =
-    useState(null)
-
-  const [deletingProject, setDeletingProject] =
-    useState(null)
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+  const [editingProject, setEditingProject] = useState(null)
+  const [deletingProject, setDeletingProject] = useState(null)
 
   function handleCreateProject(values) {
     const now = new Date().toISOString()
-
     const newProject = {
       id: crypto.randomUUID(),
       name: values.name,
@@ -32,11 +25,7 @@ function ProjectsPage() {
       updatedAt: now,
     }
 
-    setProjects((current) => [
-      ...current,
-      newProject,
-    ])
-
+    setProjects((current) => [...current, newProject])
     setIsCreateModalOpen(false)
   }
 
@@ -53,17 +42,11 @@ function ProjectsPage() {
           : project,
       ),
     )
-
     setEditingProject(null)
   }
 
   function handleDeleteProject(projectId) {
-    setProjects((current) =>
-      current.filter(
-        (project) => project.id !== projectId,
-      ),
-    )
-
+    setProjects((current) => current.filter((project) => project.id !== projectId))
     setDeletingProject(null)
   }
 
@@ -72,15 +55,10 @@ function ProjectsPage() {
       <div className="projects-page-header">
         <div>
           <h2>Projects</h2>
-
-          <p>
-            Create and manage your projects.
-          </p>
+          <p>Create and manage your projects.</p>
         </div>
 
-        <Button
-          onClick={() => setIsCreateModalOpen(true)}
-        >
+        <Button onClick={() => setIsCreateModalOpen(true)}>
           Create Project
         </Button>
       </div>

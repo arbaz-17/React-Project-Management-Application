@@ -1,0 +1,76 @@
+/* =========================================================
+   Theme — design tokens (light + dark)
+   ========================================================= */
+
+:root {
+  /* Color */
+  --color-charcoal: #1c1c1f;
+  --color-charcoal-soft: #2a2a2e;
+  --color-orange: #ff6a2c;
+  --color-orange-deep: #e2551c;
+  --color-orange-soft: #fff1ea;
+
+  --color-bg: #f6f6f5;
+  --color-surface: #ffffff;
+  --color-border: #e4e3e1;
+  --color-border-strong: #d5d4d1;
+  --color-text: #1c1c1f;
+  --color-text-muted: #77767a;
+  --color-text-subtle: #a3a2a6;
+
+  --color-success: #2f9e63;
+  --color-success-bg: #eaf7f0;
+  --color-danger: #d6483a;
+  --color-danger-bg: #fbeceb;
+  --color-warning: #c8811a;
+  --color-warning-bg: #fdf3e3;
+  --color-info: #3e7bfa;
+  --color-info-bg: #eaf1ff;
+
+  /* Layout */
+  --sidebar-width: 240px;
+  --header-height: 60px;
+
+  /* Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* Shadow */
+  --shadow-sm: 0 1px 2px rgba(28, 28, 31, 0.06);
+  --shadow-md: 0 4px 12px rgba(28, 28, 31, 0.10);
+  --shadow-lg: 0 12px 32px rgba(28, 28, 31, 0.16);
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  /* Type */
+  --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  --color-bg: #141416;
+  --color-surface: #1e1e21;
+  --color-border: #2e2e31;
+  --color-border-strong: #3a3a3e;
+  --color-text: #f2f2f1;
+  --color-text-muted: #a3a2a6;
+  --color-text-subtle: #77767a;
+  --color-charcoal: #18181a;
+  --color-charcoal-soft: #232326;
+  --color-orange-soft: #3a281f;
+
+  --color-success-bg: rgba(47, 158, 99, 0.14);
+  --color-danger-bg: rgba(214, 72, 58, 0.14);
+  --color-warning-bg: rgba(200, 129, 26, 0.14);
+  --color-info-bg: rgba(62, 123, 250, 0.14);
+
+  color-scheme: dark;
+}

@@ -4,20 +4,13 @@ import Badge from '../../../components/ui/Badge'
 import Button from '../../../components/ui/Button'
 import Card from '../../../components/ui/Card'
 
-function ProjectCard({
-  project,
-  onEdit,
-  onDelete,
-}) {
+function ProjectCard({ project, onEdit, onDelete }) {
   return (
     <Card className="project-card">
       <div className="project-card-header">
-        <div>
+        <div className="project-card-title-group">
           <h3>{project.name}</h3>
-
-          <Badge variant="info">
-            Project
-          </Badge>
+          <Badge variant="info">Project</Badge>
         </div>
       </div>
 
