@@ -19,7 +19,14 @@ const priorityOptions = [
   { value: 'HIGH', label: 'High' },
 ]
 
-function TaskForm({ initialValues, onSubmit, onCancel, submitLabel = 'Create Task' }) {
+function TaskForm({
+  initialValues,
+  onSubmit,
+  onCancel,
+  submitLabel = 'Create Task',
+  isSubmitting = false,
+  serverError = null,
+}) {
   const [values, setValues] = useState({
     title: initialValues?.title ?? '',
     description: initialValues?.description ?? '',
@@ -33,6 +40,7 @@ function TaskForm({ initialValues, onSubmit, onCancel, submitLabel = 'Create Tas
 
   function handleChange(event) {
     const { name, value } = event.target
+
     setValues((current) => ({
       ...current,
       [name]: value,
@@ -41,10 +49,13 @@ function TaskForm({ initialValues, onSubmit, onCancel, submitLabel = 'Create Tas
 
   function handleSubmit(event) {
     event.preventDefault()
+
     const validationErrors = validateTask(values)
     setErrors(validationErrors)
 
-    if (Object.keys(validationErrors).length > 0) return
+    if (Object.keys(validationErrors).length > 0) {
+      return
+    }
 
     onSubmit({
       title: values.title.trim(),
@@ -58,6 +69,12 @@ function TaskForm({ initialValues, onSubmit, onCancel, submitLabel = 'Create Tas
 
   return (
     <form className="task-form" onSubmit={handleSubmit}>
+      {serverError && (
+        <p className="form-error" role="alert">
+          {serverError}
+        </p>
+      )}
+
       <Input
         id="task-title"
         name="title"
@@ -66,6 +83,7 @@ function TaskForm({ initialValues, onSubmit, onCancel, submitLabel = 'Create Tas
         onChange={handleChange}
         placeholder="e.g. Implement login page"
         required
+        disabled={isSubmitting}
         error={errors.title}
       />
 
@@ -77,6 +95,7 @@ function TaskForm({ initialValues, onSubmit, onCancel, submitLabel = 'Create Tas
         onChange={handleChange}
         placeholder="Describe the task..."
         rows={5}
+        disabled={isSubmitting}
         error={errors.description}
       />
 
@@ -89,6 +108,7 @@ function TaskForm({ initialValues, onSubmit, onCancel, submitLabel = 'Create Tas
           onChange={handleChange}
           options={statusOptions}
           required
+          disabled={isSubmitting}
           error={errors.status}
         />
 
@@ -100,6 +120,7 @@ function TaskForm({ initialValues, onSubmit, onCancel, submitLabel = 'Create Tas
           onChange={handleChange}
           options={priorityOptions}
           required
+          disabled={isSubmitting}
           error={errors.priority}
         />
       </div>
@@ -113,6 +134,7 @@ function TaskForm({ initialValues, onSubmit, onCancel, submitLabel = 'Create Tas
           onChange={handleChange}
           placeholder="e.g. John Doe"
           required
+          disabled={isSubmitting}
           error={errors.assignee}
         />
 
@@ -123,15 +145,24 @@ function TaskForm({ initialValues, onSubmit, onCancel, submitLabel = 'Create Tas
           label="Due Date"
           value={values.dueDate}
           onChange={handleChange}
+          disabled={isSubmitting}
         />
       </div>
 
       <div className="form-actions">
-        <Button variant="secondary" onClick={onCancel}>
+        <Button
+          variant="secondary"
+          onClick={onCancel}
+          disabled={isSubmitting}
+        >
           Cancel
         </Button>
-        <Button type="submit">
-          {submitLabel}
+
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? 'Saving...' : submitLabel}
         </Button>
       </div>
     </form>

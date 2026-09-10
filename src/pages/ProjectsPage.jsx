@@ -1,63 +1,102 @@
-import { useState } from "react";
+import { useState } from 'react'
 
-import Button from "../components/ui/Button";
-import Modal from "../components/ui/Modal";
+import Button from '../components/ui/Button'
+import Modal from '../components/ui/Modal'
+import ConfirmationDialog from '../components/ui/ConfirmationDialog'
+import LoadingState from '../components/ui/LoadingState'
+import ErrorState from '../components/ui/ErrorState'
 
-import ConfirmationDialog from "../components/ui/ConfirmationDialog";
-import ProjectForm from "../features/projects/components/ProjectForm";
-import ProjectList from "../features/projects/components/ProjectList";
+import ProjectForm from '../features/projects/components/ProjectForm'
+import ProjectList from '../features/projects/components/ProjectList'
 
-import useDisclosure from "../hooks/useDisclosure";
+import useDisclosure from '../hooks/useDisclosure'
+import useProjects from '../features/projects/hooks/useProjects'
 
-import initialProjects from "../features/projects/data/initialProjects";
+import {
+  useCreateProject,
+  useUpdateProject,
+  useDeleteProject,
+} from '../features/projects/hooks/useProjectMutations'
 
 function ProjectsPage() {
-  const [projects, setProjects] = useState(initialProjects);
+  const {
+    data: projects = [],
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useProjects()
 
+  const createProjectMutation = useCreateProject()
+  const updateProjectMutation = useUpdateProject()
+  const deleteProjectMutation = useDeleteProject()
+
+  // Local UI state
   const {
     isOpen: isCreateModalOpen,
     open: openCreateModal,
     close: closeCreateModal,
-  } = useDisclosure();
+  } = useDisclosure()
 
-  const [editingProject, setEditingProject] = useState(null);
-  const [deletingProject, setDeletingProject] = useState(null);
+  const [editingProject, setEditingProject] = useState(null)
+  const [deletingProject, setDeletingProject] = useState(null)
 
   function handleCreateProject(values) {
-    const now = new Date().toISOString();
-    const newProject = {
-      id: crypto.randomUUID(),
-      name: values.name,
-      description: values.description,
-      createdAt: now,
-      updatedAt: now,
-    };
-
-    setProjects((current) => [...current, newProject]);
-    closeCreateModal();
+    createProjectMutation.mutate(values, {
+      onSuccess: () => {
+        closeCreateModal()
+      },
+    })
   }
 
   function handleEditProject(values) {
-    setProjects((current) =>
-      current.map((project) =>
-        project.id === editingProject.id
-          ? {
-              ...project,
-              name: values.name,
-              description: values.description,
-              updatedAt: new Date().toISOString(),
-            }
-          : project,
-      ),
-    );
-    setEditingProject(null);
+    if (!editingProject) {
+      return
+    }
+
+    updateProjectMutation.mutate(
+      {
+        projectId: editingProject.id,
+        project: values,
+      },
+      {
+        onSuccess: () => {
+          setEditingProject(null)
+        },
+      },
+    )
   }
 
   function handleDeleteProject(projectId) {
-    setProjects((current) =>
-      current.filter((project) => project.id !== projectId),
-    );
-    setDeletingProject(null);
+    deleteProjectMutation.mutate(projectId, {
+      onSuccess: () => {
+        setDeletingProject(null)
+      },
+    })
+  }
+
+  if (isLoading) {
+    return (
+      <section className="page projects-page">
+        <LoadingState message="Loading projects..." />
+      </section>
+    )
+  }
+
+  if (isError) {
+    return (
+      <section className="page projects-page">
+        <ErrorState
+          title="Unable to load projects"
+          message={error.message}
+          action={
+            <Button onClick={() => refetch()}>
+              Try Again
+            </Button>
+          }
+        />
+      </section>
+    )
   }
 
   return (
@@ -68,7 +107,12 @@ function ProjectsPage() {
           <p>Create and manage your projects.</p>
         </div>
 
-        <Button onClick={openCreateModal}>Create Project</Button>
+        <Button
+          onClick={openCreateModal}
+          disabled={createProjectMutation.isPending}
+        >
+          Create Project
+        </Button>
       </div>
 
       <ProjectList
@@ -77,6 +121,7 @@ function ProjectsPage() {
         onDelete={setDeletingProject}
       />
 
+      {/* Create Project */}
       <Modal
         isOpen={isCreateModalOpen}
         onClose={closeCreateModal}
@@ -85,9 +130,16 @@ function ProjectsPage() {
         <ProjectForm
           onSubmit={handleCreateProject}
           onCancel={closeCreateModal}
+          isSubmitting={createProjectMutation.isPending}
+          serverError={
+            createProjectMutation.isError
+              ? createProjectMutation.error.message
+              : null
+          }
         />
       </Modal>
 
+      {/* Edit Project */}
       <Modal
         isOpen={Boolean(editingProject)}
         onClose={() => setEditingProject(null)}
@@ -98,9 +150,16 @@ function ProjectsPage() {
           onSubmit={handleEditProject}
           onCancel={() => setEditingProject(null)}
           submitLabel="Save Changes"
+          isSubmitting={updateProjectMutation.isPending}
+          serverError={
+            updateProjectMutation.isError
+              ? updateProjectMutation.error.message
+              : null
+          }
         />
       </Modal>
 
+      {/* Delete Project */}
       <ConfirmationDialog
         isOpen={Boolean(deletingProject)}
         onClose={() => setDeletingProject(null)}
@@ -109,12 +168,13 @@ function ProjectsPage() {
         message={
           deletingProject
             ? `Are you sure you want to delete ${deletingProject.name}?`
-            : ""
+            : ''
         }
         confirmLabel="Delete Project"
+        isConfirming={deleteProjectMutation.isPending}
       />
     </section>
-  );
+  )
 }
 
-export default ProjectsPage;
+export default ProjectsPage
