@@ -1,5 +1,5 @@
-import Button from './Button'
-import Modal from './Modal'
+import Button from "./Button";
+import Modal from "./Modal";
 
 function ConfirmationDialog({
   isOpen,
@@ -8,6 +8,7 @@ function ConfirmationDialog({
   title,
   message,
   confirmLabel = 'Confirm',
+  isConfirming = false,
 }) {
   return (
     <Modal
@@ -25,16 +26,24 @@ function ConfirmationDialog({
       </p>
 
       <div className="confirmation-dialog-actions">
-        <Button variant="secondary" onClick={onClose}>
+        <Button
+          variant="secondary"
+          onClick={onClose}
+          disabled={isConfirming}
+        >
           Cancel
         </Button>
 
-        <Button variant="danger" onClick={onConfirm}>
-          {confirmLabel}
+        <Button
+          variant="danger"
+          onClick={onConfirm}
+          disabled={isConfirming}
+        >
+          {isConfirming ? 'Deleting...' : confirmLabel}
         </Button>
       </div>
     </Modal>
   )
 }
 
-export default ConfirmationDialog
+export default ConfirmationDialog;

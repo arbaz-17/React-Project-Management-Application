@@ -23,7 +23,7 @@ export function createProject(project) {
 
 export function updateProject(projectId, project) {
   return request(`/projects/${projectId}`, {
-    method: 'PATCH',
+    method: 'PUT',
     body: JSON.stringify({
       ...project,
       updatedAt: new Date().toISOString(),
