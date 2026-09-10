@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
-import Badge from "../components/ui/Badge";
-import Button from "../components/ui/Button";
 import Modal from "../components/ui/Modal";
-
-import BoardColumn from "../features/board/components/BoardColumn";
 import ConfirmationDialog from "../components/ui/ConfirmationDialog";
+
+import Board from "../features/board/components/Board";
+import BoardHeader from "../features/board/components/BoardHeader";
 import TaskForm from "../features/tasks/components/TaskForm";
 
 import useDisclosure from "../hooks/useDisclosure";
@@ -15,15 +14,9 @@ import initialTasks from "../features/tasks/data/initialTasks";
 import initialProjects from "../features/projects/data/initialProjects";
 import { getProjectById } from "../features/projects/utils/projectUtils";
 
-const columns = [
-  { id: "BACKLOG", title: "Backlog" },
-  { id: "TODO", title: "To Do" },
-  { id: "IN_PROGRESS", title: "In Progress" },
-  { id: "DONE", title: "Done" },
-];
-
 function ProjectBoardPage() {
   const { projectId } = useParams();
+
   const project = getProjectById(initialProjects, projectId);
 
   const [tasks, setTasks] = useState(() =>
@@ -41,6 +34,7 @@ function ProjectBoardPage() {
 
   function handleCreateTask(values) {
     const now = new Date().toISOString();
+
     const newTask = {
       id: crypto.randomUUID(),
       projectId,
@@ -65,24 +59,25 @@ function ProjectBoardPage() {
           : task,
       ),
     );
+
     setEditingTask(null);
   }
 
   function handleDeleteTask(taskId) {
     setTasks((current) => current.filter((task) => task.id !== taskId));
-    setDeletingTask(null);
-  }
 
-  function getTasksForColumn(columnId) {
-    return tasks.filter((task) => task.status === columnId);
+    setDeletingTask(null);
   }
 
   if (!project) {
     return (
       <section className="page">
         <h2>Project Not Found</h2>
+
         <p>The project you're looking for doesn't exist.</p>
+
         <br />
+
         <Link to="/projects" className="button button-primary button-medium">
           Back to Projects
         </Link>
@@ -92,32 +87,9 @@ function ProjectBoardPage() {
 
   return (
     <section className="page project-board-page">
-      <div className="project-board-header">
-        <div>
-          <Link to="/projects" className="project-back-link">
-            ← Back to Projects
-          </Link>
-          <h2>{project.name}</h2>
-          <p>{project.description}</p>
-        </div>
+      <BoardHeader project={project} onAddTask={openCreateModal} />
 
-        <div className="project-board-header-actions">
-          <Badge variant="info">Project Board</Badge>
-          <Button onClick={openCreateModal}>+ Add Task</Button>
-        </div>
-      </div>
-
-      <div className="board">
-        {columns.map((column) => (
-          <BoardColumn
-            key={column.id}
-            column={column}
-            tasks={getTasksForColumn(column.id)}
-            onEditTask={setEditingTask}
-            onDeleteTask={setDeletingTask}
-          />
-        ))}
-      </div>
+      <Board tasks={tasks} onEdit={setEditingTask} onDelete={setDeletingTask} />
 
       <Modal
         isOpen={isCreateModalOpen}
