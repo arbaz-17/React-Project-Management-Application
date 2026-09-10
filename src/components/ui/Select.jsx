@@ -9,6 +9,8 @@ function Select({
   required = false,
   error,
 }) {
+  const errorId = `${id}-error`
+
   return (
     <div className="form-field">
       {label && (
@@ -24,6 +26,8 @@ function Select({
         onChange={onChange}
         disabled={disabled}
         required={required}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? errorId : undefined}
         className={`select ${error ? 'input-error' : ''}`}
       >
         {options.map((option) => (
@@ -33,7 +37,11 @@ function Select({
         ))}
       </select>
 
-      {error && <p className="form-error">{error}</p>}
+      {error && (
+        <p id={errorId} className="form-error">
+          {error}
+        </p>
+      )}
     </div>
   )
 }

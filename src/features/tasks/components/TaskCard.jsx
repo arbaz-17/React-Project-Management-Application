@@ -1,15 +1,11 @@
+import { memo } from 'react'
 import { Link } from 'react-router-dom'
 
-import Avatar from '../../../components/ui/Avatar'
-import Badge from '../../../components/ui/Badge'
-import Button from '../../../components/ui/Button'
 import Card from '../../../components/ui/Card'
 
-const priorityVariants = {
-  LOW: 'default',
-  MEDIUM: 'warning',
-  HIGH: 'danger',
-}
+import AssigneeAvatar from './AssigneeAvatar'
+import TaskActions from './TaskActions'
+import TaskPriorityBadge from './TaskPriorityBadge'
 
 function TaskCard({ task, onEdit, onDelete }) {
   return (
@@ -23,9 +19,8 @@ function TaskCard({ task, onEdit, onDelete }) {
             {task.title}
           </Link>
         </div>
-        <Badge variant={priorityVariants[task.priority]}>
-          {task.priority}
-        </Badge>
+
+        <TaskPriorityBadge priority={task.priority} />
       </div>
 
       {task.description && (
@@ -35,26 +30,21 @@ function TaskCard({ task, onEdit, onDelete }) {
       )}
 
       <div className="task-card-meta">
-        <div className="task-assignee">
-          <Avatar name={task.assignee} size="small" />
-          <span>{task.assignee}</span>
-        </div>
+        <AssigneeAvatar assignee={task.assignee} />
 
         {task.dueDate && (
-          <span className="task-due-date">Due {task.dueDate}</span>
+          <span className="task-due-date">
+            Due {task.dueDate}
+          </span>
         )}
       </div>
 
-      <div className="task-card-actions">
-        <Button variant="secondary" size="small" onClick={() => onEdit(task)}>
-          Edit
-        </Button>
-        <Button variant="danger" size="small" onClick={() => onDelete(task)}>
-          Delete
-        </Button>
-      </div>
+      <TaskActions
+        onEdit={() => onEdit(task)}
+        onDelete={() => onDelete(task)}
+      />
     </Card>
   )
 }
 
-export default TaskCard
+export default memo(TaskCard)

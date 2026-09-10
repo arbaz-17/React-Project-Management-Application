@@ -10,13 +10,12 @@ function Textarea({
   rows = 4,
   error,
 }) {
+  const errorId = `${id}-error`
+
   return (
     <div className="form-field">
       {label && (
-        <label
-          htmlFor={id}
-          className="form-label"
-        >
+        <label htmlFor={id} className="form-label">
           {label}
         </label>
       )}
@@ -30,11 +29,13 @@ function Textarea({
         disabled={disabled}
         required={required}
         rows={rows}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? errorId : undefined}
         className={`textarea ${error ? 'input-error' : ''}`}
       />
 
       {error && (
-        <p className="form-error">
+        <p id={errorId} className="form-error">
           {error}
         </p>
       )}
