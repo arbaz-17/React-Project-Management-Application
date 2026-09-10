@@ -77,14 +77,12 @@
   gap: var(--space-3);
 }
 
-.delete-project-message,
-.delete-modal-message {
+.confirmation-dialog-message {
   color: var(--color-text);
   margin-bottom: var(--space-2);
 }
 
-.delete-project-warning,
-.delete-modal-warning {
+.confirmation-dialog-warning {
   font-size: 13px;
   color: var(--color-danger);
 }

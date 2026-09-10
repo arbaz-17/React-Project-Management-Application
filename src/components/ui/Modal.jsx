@@ -8,12 +8,18 @@ function Modal({
   size = 'medium',
 }) {
   const modalRef = useRef(null)
+  const previouslyFocusedElementRef = useRef(null)
   const titleId = useId()
 
   useEffect(() => {
     if (!isOpen) {
       return
     }
+
+    previouslyFocusedElementRef.current = document.activeElement
+
+    const previousBodyOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
 
     modalRef.current?.focus()
 
@@ -27,6 +33,17 @@ function Modal({
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
+
+      document.body.style.overflow = previousBodyOverflow
+
+      const previouslyFocusedElement =
+        previouslyFocusedElementRef.current
+
+      if (previouslyFocusedElement instanceof HTMLElement) {
+        previouslyFocusedElement.focus()
+      }
+
+      previouslyFocusedElementRef.current = null
     }
   }, [isOpen, onClose])
 
@@ -49,7 +66,7 @@ function Modal({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        tabIndex="-1"
+        tabIndex={-1}
       >
         <div className="modal-header">
           <h2 id={titleId}>{title}</h2>
