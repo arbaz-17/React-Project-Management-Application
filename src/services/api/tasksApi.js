@@ -4,8 +4,18 @@ export function getTasks() {
   return request('/tasks')
 }
 
-export function getTasksByProject(projectId) {
-  return request(`/tasks?projectId=${encodeURIComponent(projectId)}`)
+export async function getTasksByProject(projectId) {
+  try {
+    return await request(
+      `/tasks?projectId=${encodeURIComponent(projectId)}`,
+    )
+  } catch (error) {
+    if (error.status === 404) {
+      return []
+    }
+
+    throw error
+  }
 }
 
 export function getTask(taskId) {
@@ -27,7 +37,7 @@ export function createTask(task) {
 
 export function updateTask(taskId, task) {
   return request(`/tasks/${taskId}`, {
-    method: 'PATCH',
+    method: 'PUT',
     body: JSON.stringify({
       ...task,
       updatedAt: new Date().toISOString(),

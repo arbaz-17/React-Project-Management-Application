@@ -12,9 +12,15 @@ import BoardHeader from '../features/board/components/BoardHeader'
 import TaskForm from '../features/tasks/components/TaskForm'
 
 import useDisclosure from '../hooks/useDisclosure'
-import useProjectById from '../features/projects/hooks/useProjectById'
 
-import initialTasks from '../features/tasks/data/initialTasks'
+import useProjectById from '../features/projects/hooks/useProjectById'
+import useProjectTasks from '../features/tasks/hooks/useProjectTasks'
+
+import {
+  useCreateTask,
+  useUpdateTask,
+  useDeleteTask,
+} from '../features/tasks/hooks/useTaskMutations'
 
 function ProjectBoardPage() {
   const { projectId } = useParams()
@@ -27,9 +33,17 @@ function ProjectBoardPage() {
     refetch: refetchProject,
   } = useProjectById(projectId)
 
-  const [tasks, setTasks] = useState(() =>
-    initialTasks.filter((task) => task.projectId === projectId),
-  )
+  const {
+    data: tasks = [],
+    isLoading: isTasksLoading,
+    isError: isTasksError,
+    error: tasksError,
+    refetch: refetchTasks,
+  } = useProjectTasks(projectId)
+
+  const createTaskMutation = useCreateTask()
+  const updateTaskMutation = useUpdateTask()
+  const deleteTaskMutation = useDeleteTask()
 
   const {
     isOpen: isCreateModalOpen,
@@ -41,41 +55,53 @@ function ProjectBoardPage() {
   const [deletingTask, setDeletingTask] = useState(null)
 
   function handleCreateTask(values) {
-    const now = new Date().toISOString()
-
-    const newTask = {
-      id: crypto.randomUUID(),
-      projectId,
-      ...values,
-      createdAt: now,
-      updatedAt: now,
-    }
-
-    setTasks((current) => [...current, newTask])
-    closeCreateModal()
-  }
-
-  function handleEditTask(values) {
-    setTasks((current) =>
-      current.map((task) =>
-        task.id === editingTask.id
-          ? {
-              ...task,
-              ...values,
-              updatedAt: new Date().toISOString(),
-            }
-          : task,
-      ),
+    createTaskMutation.mutate(
+      {
+        projectId,
+        task: values,
+      },
+      {
+        onSuccess: () => {
+          closeCreateModal()
+        },
+      },
     )
-
-    setEditingTask(null)
   }
 
-  function handleDeleteTask(taskId) {
-    setTasks((current) => current.filter((task) => task.id !== taskId))
-
-    setDeletingTask(null)
+function handleEditTask(values) {
+  if (!editingTask) {
+    return
   }
+
+  updateTaskMutation.mutate(
+    {
+      taskId: editingTask.id,
+      task: {
+        projectId,
+        ...values,
+      },
+    },
+    {
+      onSuccess: () => {
+        setEditingTask(null)
+      },
+    },
+  )
+}
+
+function handleDeleteTask(taskId) {
+  deleteTaskMutation.mutate(
+    {
+      projectId,
+      taskId,
+    },
+    {
+      onSuccess: () => {
+        setDeletingTask(null)
+      },
+    },
+  )
+}
 
   if (isProjectLoading) {
     return (
@@ -120,6 +146,40 @@ function ProjectBoardPage() {
     )
   }
 
+  if (isTasksLoading) {
+    return (
+      <section className="page project-board-page">
+        <BoardHeader
+          project={project}
+          onAddTask={openCreateModal}
+        />
+
+        <LoadingState message="Loading tasks..." />
+      </section>
+    )
+  }
+
+  if (isTasksError) {
+    return (
+      <section className="page project-board-page">
+        <BoardHeader
+          project={project}
+          onAddTask={openCreateModal}
+        />
+
+        <ErrorState
+          title="Unable to load tasks"
+          message={tasksError.message}
+          action={
+            <Button onClick={() => refetchTasks()}>
+              Try Again
+            </Button>
+          }
+        />
+      </section>
+    )
+  }
+
   return (
     <section className="page project-board-page">
       <BoardHeader
@@ -129,10 +189,11 @@ function ProjectBoardPage() {
 
       <Board
         tasks={tasks}
-        onEdit={setEditingTask}
-        onDelete={setDeletingTask}
+        onEditTask={setEditingTask}
+        onDeleteTask={setDeletingTask}
       />
 
+      {/* Create Task */}
       <Modal
         isOpen={isCreateModalOpen}
         onClose={closeCreateModal}
@@ -142,9 +203,16 @@ function ProjectBoardPage() {
         <TaskForm
           onSubmit={handleCreateTask}
           onCancel={closeCreateModal}
+          isSubmitting={createTaskMutation.isPending}
+          serverError={
+            createTaskMutation.isError
+              ? createTaskMutation.error.message
+              : null
+          }
         />
       </Modal>
 
+      {/* Edit Task */}
       <Modal
         isOpen={Boolean(editingTask)}
         onClose={() => setEditingTask(null)}
@@ -158,10 +226,17 @@ function ProjectBoardPage() {
             onSubmit={handleEditTask}
             onCancel={() => setEditingTask(null)}
             submitLabel="Save Changes"
+            isSubmitting={updateTaskMutation.isPending}
+            serverError={
+              updateTaskMutation.isError
+                ? updateTaskMutation.error.message
+                : null
+            }
           />
         )}
       </Modal>
 
+      {/* Delete Task */}
       <ConfirmationDialog
         isOpen={Boolean(deletingTask)}
         onClose={() => setDeletingTask(null)}
@@ -173,6 +248,7 @@ function ProjectBoardPage() {
             : ''
         }
         confirmLabel="Delete Task"
+        isConfirming={deleteTaskMutation.isPending}
       />
     </section>
   )

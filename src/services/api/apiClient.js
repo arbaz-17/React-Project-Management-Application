@@ -24,7 +24,10 @@ async function request(endpoint, options = {}) {
       // Keep the default HTTP error message.
     }
 
-    throw new Error(message)
+    const error = new Error(message)
+    error.status = response.status
+
+    throw error
   }
 
   if (response.status === 204) {
