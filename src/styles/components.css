@@ -223,8 +223,7 @@
   margin: 0;
 }
 
-.form-actions,
-.project-form-actions {
+.confirmation-dialog-actions {
   display: flex;
   justify-content: flex-end;
   gap: var(--space-3);

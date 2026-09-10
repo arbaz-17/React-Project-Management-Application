@@ -1,32 +1,40 @@
-import { useState } from 'react'
+import { useState } from "react";
 
-import Button from '../components/ui/Button'
-import Modal from '../components/ui/Modal'
+import Button from "../components/ui/Button";
+import Modal from "../components/ui/Modal";
 
-import DeleteProjectModal from '../features/projects/components/DeleteProjectModal'
-import ProjectForm from '../features/projects/components/ProjectForm'
-import ProjectList from '../features/projects/components/ProjectList'
+import ConfirmationDialog from "../components/ui/ConfirmationDialog";
+import ProjectForm from "../features/projects/components/ProjectForm";
+import ProjectList from "../features/projects/components/ProjectList";
 
-import initialProjects from '../features/projects/data/initialProjects'
+import useDisclosure from "../hooks/useDisclosure";
+
+import initialProjects from "../features/projects/data/initialProjects";
 
 function ProjectsPage() {
-  const [projects, setProjects] = useState(initialProjects)
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
-  const [editingProject, setEditingProject] = useState(null)
-  const [deletingProject, setDeletingProject] = useState(null)
+  const [projects, setProjects] = useState(initialProjects);
+
+  const {
+    isOpen: isCreateModalOpen,
+    open: openCreateModal,
+    close: closeCreateModal,
+  } = useDisclosure();
+
+  const [editingProject, setEditingProject] = useState(null);
+  const [deletingProject, setDeletingProject] = useState(null);
 
   function handleCreateProject(values) {
-    const now = new Date().toISOString()
+    const now = new Date().toISOString();
     const newProject = {
       id: crypto.randomUUID(),
       name: values.name,
       description: values.description,
       createdAt: now,
       updatedAt: now,
-    }
+    };
 
-    setProjects((current) => [...current, newProject])
-    setIsCreateModalOpen(false)
+    setProjects((current) => [...current, newProject]);
+    closeCreateModal();
   }
 
   function handleEditProject(values) {
@@ -41,13 +49,15 @@ function ProjectsPage() {
             }
           : project,
       ),
-    )
-    setEditingProject(null)
+    );
+    setEditingProject(null);
   }
 
   function handleDeleteProject(projectId) {
-    setProjects((current) => current.filter((project) => project.id !== projectId))
-    setDeletingProject(null)
+    setProjects((current) =>
+      current.filter((project) => project.id !== projectId),
+    );
+    setDeletingProject(null);
   }
 
   return (
@@ -58,9 +68,7 @@ function ProjectsPage() {
           <p>Create and manage your projects.</p>
         </div>
 
-        <Button onClick={() => setIsCreateModalOpen(true)}>
-          Create Project
-        </Button>
+        <Button onClick={openCreateModal}>Create Project</Button>
       </div>
 
       <ProjectList
@@ -71,12 +79,12 @@ function ProjectsPage() {
 
       <Modal
         isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
+        onClose={closeCreateModal}
         title="Create Project"
       >
         <ProjectForm
           onSubmit={handleCreateProject}
-          onCancel={() => setIsCreateModalOpen(false)}
+          onCancel={closeCreateModal}
         />
       </Modal>
 
@@ -93,14 +101,20 @@ function ProjectsPage() {
         />
       </Modal>
 
-      <DeleteProjectModal
-        project={deletingProject}
+      <ConfirmationDialog
         isOpen={Boolean(deletingProject)}
         onClose={() => setDeletingProject(null)}
-        onConfirm={handleDeleteProject}
+        onConfirm={() => handleDeleteProject(deletingProject.id)}
+        title="Delete Project"
+        message={
+          deletingProject
+            ? `Are you sure you want to delete ${deletingProject.name}?`
+            : ""
+        }
+        confirmLabel="Delete Project"
       />
     </section>
-  )
+  );
 }
 
-export default ProjectsPage
+export default ProjectsPage;
