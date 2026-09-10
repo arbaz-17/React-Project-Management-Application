@@ -1,13 +1,16 @@
+import { LayoutDashboard, FolderKanban } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 
 const navigationItems = [
   {
     label: 'Dashboard',
     to: '/',
+    icon: LayoutDashboard,
   },
   {
     label: 'Projects',
     to: '/projects',
+    icon: FolderKanban,
   },
 ]
 
@@ -22,18 +25,22 @@ function Sidebar() {
       </div>
 
       <nav className="sidebar-nav" aria-label="Main navigation">
-        {navigationItems.map((item) => (
-          <NavLink
-            key={item.to}
-            to={item.to}
-            end={item.to === '/'}
-            className={({ isActive }) =>
-              `sidebar-link ${isActive ? 'sidebar-link-active' : ''}`
-            }
-          >
-            {item.label}
-          </NavLink>
-        ))}
+        {navigationItems.map((item) => {
+          const Icon = item.icon
+          return (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.to === '/'}
+              className={({ isActive }) =>
+                `sidebar-link ${isActive ? 'sidebar-link-active' : ''}`
+              }
+            >
+              <Icon size={18} />
+              {item.label}
+            </NavLink>
+          )
+        })}
       </nav>
     </aside>
   )

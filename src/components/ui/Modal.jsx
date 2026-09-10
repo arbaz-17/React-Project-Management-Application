@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useId, useRef } from 'react'
 
 function Modal({
   isOpen,
@@ -8,6 +8,7 @@ function Modal({
   size = 'medium',
 }) {
   const modalRef = useRef(null)
+  const titleId = useId()
 
   useEffect(() => {
     if (!isOpen) {
@@ -47,11 +48,11 @@ function Modal({
         className={`modal modal-${size}`}
         role="dialog"
         aria-modal="true"
-        aria-labelledby="modal-title"
+        aria-labelledby={titleId}
         tabIndex="-1"
       >
         <div className="modal-header">
-          <h2 id="modal-title">{title}</h2>
+          <h2 id={titleId}>{title}</h2>
 
           <button
             type="button"

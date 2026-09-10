@@ -1,103 +1,76 @@
-/* =========================
-   1. theme.css
-   The "Eclipse" System - Variables & Theming
-   ========================= */
+/* =========================================================
+   Theme — design tokens (light + dark)
+   ========================================================= */
 
 :root {
-  /* Typography */
-  --font-family-base: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  /* Color */
+  --color-charcoal: #1c1c1f;
+  --color-charcoal-soft: #2a2a2e;
+  --color-orange: #ff6a2c;
+  --color-orange-deep: #e2551c;
+  --color-orange-soft: #fff1ea;
 
-  /* Brand Colors (The Orange Anchor) */
-  --accent-primary: #f97316;
-  --accent-hover: #ea580c;
-  --accent-light: #ffedd5;
-  --accent-muted: #fdba74;
+  --color-bg: #f6f6f5;
+  --color-surface: #ffffff;
+  --color-border: #e4e3e1;
+  --color-border-strong: #d5d4d1;
+  --color-text: #1c1c1f;
+  --color-text-muted: #77767a;
+  --color-text-subtle: #a3a2a6;
 
-  /* Light Theme - Backgrounds */
-  --bg-main: #f5f7fa;
-  --bg-surface: #ffffff;
-  --bg-surface-hover: #f3f4f6;
-  --bg-overlay: rgba(0, 0, 0, 0.45);
+  --color-success: #2f9e63;
+  --color-success-bg: #eaf7f0;
+  --color-danger: #d6483a;
+  --color-danger-bg: #fbeceb;
+  --color-warning: #c8811a;
+  --color-warning-bg: #fdf3e3;
+  --color-info: #3e7bfa;
+  --color-info-bg: #eaf1ff;
 
-  /* Light Theme - Borders & Dividers */
-  --border-light: #e5e7eb;
-  --border-medium: #d1d5db;
-  --border-focus: rgba(249, 115, 22, 0.25);
+  /* Layout */
+  --sidebar-width: 240px;
+  --header-height: 60px;
 
-  /* Light Theme - Text */
-  --text-primary: #111827;
-  --text-secondary: #6b7280;
-  --text-inverse: #ffffff;
-
-  /* Light Theme - Status Colors */
-  --color-success-bg: #dcfce7;
-  --color-success-text: #166534;
-  
-  --color-danger-bg: #fee2e2;
-  --color-danger-text: #991b1b;
-  --color-danger-main: #dc2626;
-  --color-danger-hover: #b91c1c;
-  
-  --color-warning-bg: #fef3c7;
-  --color-warning-text: #92400e;
-  
-  --color-info-bg: #dbeafe;
-  --color-info-text: #1e40af;
-
-  /* UI Geometry & Animation */
+  /* Radius */
   --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
-  --radius-full: 9999px;
-  
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-modal: 0 20px 40px rgba(0, 0, 0, 0.15);
-  
-  --transition-base: 150ms ease;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* Shadow */
+  --shadow-sm: 0 1px 2px rgba(28, 28, 31, 0.06);
+  --shadow-md: 0 4px 12px rgba(28, 28, 31, 0.10);
+  --shadow-lg: 0 12px 32px rgba(28, 28, 31, 0.16);
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  /* Type */
+  --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  color-scheme: light;
 }
 
-/* Dark Theme Overrides */
-[data-theme="dark"] {
-  /* Brand Colors (Slightly brightened hover for dark contrast) */
-  --accent-primary: #f97316;
-  --accent-hover: #fb923c;
-  --accent-light: #431407;
-  
-  /* Dark Theme - Backgrounds */
-  --bg-main: #0a0a0a;
-  --bg-surface: #171717;
-  --bg-surface-hover: #27272a;
-  --bg-overlay: rgba(0, 0, 0, 0.75);
+[data-theme='dark'] {
+  --color-bg: #141416;
+  --color-surface: #1e1e21;
+  --color-border: #2e2e31;
+  --color-border-strong: #3a3a3e;
+  --color-text: #f2f2f1;
+  --color-text-muted: #a3a2a6;
+  --color-text-subtle: #77767a;
+  --color-charcoal: #18181a;
+  --color-charcoal-soft: #232326;
+  --color-orange-soft: #3a281f;
 
-  /* Dark Theme - Borders & Dividers */
-  --border-light: #27272a;
-  --border-medium: #3f3f46;
-  --border-focus: rgba(249, 115, 22, 0.4);
+  --color-success-bg: rgba(47, 158, 99, 0.14);
+  --color-danger-bg: rgba(214, 72, 58, 0.14);
+  --color-warning-bg: rgba(200, 129, 26, 0.14);
+  --color-info-bg: rgba(62, 123, 250, 0.14);
 
-  /* Dark Theme - Text */
-  --text-primary: #f8fafc;
-  --text-secondary: #a1a1aa;
-  --text-inverse: #111827;
-
-  /* Dark Theme - Status Colors */
-  --color-success-bg: #052e16;
-  --color-success-text: #86efac;
-  
-  --color-danger-bg: #450a0a;
-  --color-danger-text: #fca5a5;
-  --color-danger-main: #ef4444;
-  --color-danger-hover: #f87171;
-  
-  --color-warning-bg: #451a03;
-  --color-warning-text: #fde047;
-  
-  --color-info-bg: #1e3a8a;
-  --color-info-text: #93c5fd;
-
-  /* Dark Theme - Shadows (Deepened for dark mode) */
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-  --shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.75);
+  color-scheme: dark;
 }

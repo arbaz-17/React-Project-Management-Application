@@ -1,225 +1,177 @@
-/* =========================
-   3. layout.css
-   Application Shell, Sidebar, Header & Page structure
-   ========================= */
+/* =========================================================
+   Layout — app shell (sidebar, header, page container)
+   ========================================================= */
 
-/* App Layout */
 .app-layout {
   display: flex;
   min-height: 100vh;
-  background-color: var(--bg-main);
+  background: var(--color-bg);
 }
 
 .app-main {
   flex: 1;
-  min-width: 0;
   display: flex;
   flex-direction: column;
+  min-width: 0;
+}
+
+.page-container {
+  flex: 1;
+  padding: var(--space-5);
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
 }
 
 /* Sidebar */
+
 .sidebar {
-  width: 240px;
+  width: var(--sidebar-width);
   flex-shrink: 0;
-  min-height: 100vh;
-  padding: 24px 16px;
-  background-color: var(--bg-surface);
-  border-right: 1px solid var(--border-light);
-  /* Ensures smooth transitions when toggling themes */
-  transition: background-color var(--transition-base), border-color var(--transition-base);
+  background: var(--color-charcoal);
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-5) var(--space-3);
 }
 
 .sidebar-brand {
-  padding: 0 12px 24px;
+  padding: var(--space-2) var(--space-3) var(--space-5);
+  display: flex;
+  align-items: center;
 }
 
 .sidebar-brand h2 {
-  margin: 0;
-  font-size: 20px;
-  color: var(--text-primary);
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-2);
+  margin: 0;
 }
 
 .brand-accent {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: var(--accent-primary);
-  box-shadow: 0 0 8px var(--border-focus);
-  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--color-orange);
+  display: inline-block;
 }
 
 .sidebar-nav {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: var(--space-1);
 }
 
 .sidebar-link {
-  display: block;
-  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
   border-radius: var(--radius-md);
-  color: var(--text-secondary);
+  color: #b4b3b8;
   font-size: 14px;
   font-weight: 500;
-  transition: background-color var(--transition-base), color var(--transition-base);
+  border-left: 3px solid transparent;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .sidebar-link:hover {
-  background-color: var(--bg-surface-hover);
-  color: var(--text-primary);
+  background: var(--color-charcoal-soft);
+  color: #ffffff;
 }
 
 .sidebar-link-active {
-  background-color: var(--accent-light);
-  color: var(--accent-primary);
+  background: var(--color-charcoal-soft);
+  color: #ffffff;
+}
+
+.sidebar-link svg {
+  flex-shrink: 0;
 }
 
 /* Header */
+
 .header {
-  min-height: 72px;
+  height: var(--header-height);
+  flex-shrink: 0;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Added to push button to the right */
-  padding: 16px 32px;
-  background-color: var(--bg-surface);
-  border-bottom: 1px solid var(--border-light);
-  transition: background-color var(--transition-base), border-color var(--transition-base);
+  justify-content: space-between;
+  padding: 0 var(--space-5);
 }
 
-.header h1 {
-  margin: 0;
-  font-size: 20px;
+.header-info h1 {
+  font-size: 16px;
   font-weight: 600;
-  color: var(--text-primary);
 }
 
-.header p {
-  margin: 4px 0 0;
-  color: var(--text-secondary);
-  font-size: 14px;
+.header-info p {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-top: 2px;
 }
 
-/* New: Header info grouping */
-.header-info {
-  display: flex;
-  flex-direction: column;
-}
-
-/* New: Theme Toggle Button */
 .theme-toggle-btn {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 16px;
-  border-radius: var(--radius-full);
-  border: 1px solid var(--border-medium);
-  background-color: var(--bg-surface);
-  color: var(--text-primary);
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
   cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: all var(--transition-base);
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
 }
 
 .theme-toggle-btn:hover {
-  background-color: var(--bg-surface-hover);
-  border-color: var(--accent-primary);
-  color: var(--accent-primary);
-  box-shadow: 0 0 0 2px var(--border-focus);
+  border-color: var(--color-orange);
+  color: var(--color-orange);
 }
 
-/* Page Container */
-.page-container {
-  width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 32px;
-  flex: 1;
-}
+/* Misc top-level pages */
 
-.page h2 {
-  margin: 0 0 8px;
-  font-size: 28px;
-  color: var(--text-primary);
-}
-
-.page p {
-  margin: 0;
-  color: var(--text-secondary);
-}
-
-/* 404 Not Found */
 .not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   min-height: 100vh;
-  display: grid;
-  place-content: center;
+  gap: var(--space-3);
   text-align: center;
 }
 
 .not-found h1 {
-  margin: 0;
-  font-size: 64px;
-  color: var(--text-primary);
+  font-size: 48px;
+  color: var(--color-orange);
 }
 
-.not-found p {
-  margin: 8px 0 0;
-  color: var(--text-secondary);
-}
+/* Responsive shell */
 
-/* Responsive */
-@media (max-width: 768px) {
-  .sidebar {
-    width: 200px;
-  }
-
-  .header {
-    padding: 16px 20px;
-  }
-
-  .page-container {
-    padding: 24px 20px;
-  }
-}
-
-@media (max-width: 600px) {
+@media (max-width: 640px) {
   .app-layout {
     flex-direction: column;
   }
 
   .sidebar {
     width: 100%;
-    min-height: auto;
-    padding: 16px;
-    border-right: none;
-    border-bottom: 1px solid var(--border-light);
-  }
-
-  .sidebar-brand {
-    padding: 0 8px 12px;
+    flex-direction: row;
+    align-items: center;
+    padding: var(--space-3);
   }
 
   .sidebar-nav {
     flex-direction: row;
-    gap: 8px;
-    overflow-x: auto;
-  }
-
-  .sidebar-link {
-    flex: 1;
-    text-align: center;
-    white-space: nowrap;
-  }
-
-  .header {
-    min-height: 64px;
-    padding: 16px;
-  }
-
-  .page-container {
-    padding: 20px 16px;
   }
 }
