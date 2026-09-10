@@ -1,7 +1,10 @@
 import { Sun, Moon } from 'lucide-react'
 
-// Theme is a global state and should be put in redux later it is just a placeholder as of now
-function Header({ isDarkMode, toggleTheme }) {
+import { useTheme } from '../../hooks/useTheme.js'
+
+function Header() {
+  const { isDarkMode, toggleTheme } = useTheme()
+
   return (
     <header className="header">
       <div className="header-info">
@@ -12,7 +15,9 @@ function Header({ isDarkMode, toggleTheme }) {
       <button
         className="theme-toggle-btn"
         onClick={toggleTheme}
-        aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+        aria-label={
+          isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'
+        }
       >
         {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
       </button>
