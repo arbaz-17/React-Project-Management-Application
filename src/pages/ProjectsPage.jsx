@@ -1,57 +1,78 @@
-import { useState } from 'react'
+import { useState } from "react";
 
-import Button from '../components/ui/Button'
-import Modal from '../components/ui/Modal'
-import ConfirmationDialog from '../components/ui/ConfirmationDialog'
-import LoadingState from '../components/ui/LoadingState'
-import ErrorState from '../components/ui/ErrorState'
+import Button from "../components/ui/Button";
+import Modal from "../components/ui/Modal";
+import ConfirmationDialog from "../components/ui/ConfirmationDialog";
+import LoadingState from "../components/ui/LoadingState";
+import ErrorState from "../components/ui/ErrorState";
 
-import ProjectForm from '../features/projects/components/ProjectForm'
-import ProjectList from '../features/projects/components/ProjectList'
+import ProjectForm from "../features/projects/components/ProjectForm";
+import ProjectList from "../features/projects/components/ProjectList";
+import ProjectFilters from "../features/projects/components/ProjectFilters";
 
-import useDisclosure from '../hooks/useDisclosure'
-import useProjects from '../features/projects/hooks/useProjects'
+import useDisclosure from "../hooks/useDisclosure";
+import useProjectUrlState from "../hooks/useProjectUrlState";
+import useProjects from "../features/projects/hooks/useProjects";
 
 import {
   useCreateProject,
   useUpdateProject,
   useDeleteProject,
-} from '../features/projects/hooks/useProjectMutations'
+} from "../features/projects/hooks/useProjectMutations";
 
 function ProjectsPage() {
+  const {
+    search,
+    status,
+    category,
+    sort,
+    updateUrl,
+    clearUrlState,
+  } = useProjectUrlState();
+
   const {
     data: projects = [],
     isLoading,
     isError,
     error,
     refetch,
-  } = useProjects()
+  } = useProjects({
+    search,
+    status,
+    category,
+    sort,
+  });
 
-  const createProjectMutation = useCreateProject()
-  const updateProjectMutation = useUpdateProject()
-  const deleteProjectMutation = useDeleteProject()
+  const createProjectMutation = useCreateProject();
+  const updateProjectMutation = useUpdateProject();
+  const deleteProjectMutation = useDeleteProject();
 
-  // Local UI state
   const {
     isOpen: isCreateModalOpen,
     open: openCreateModal,
     close: closeCreateModal,
-  } = useDisclosure()
+  } = useDisclosure();
 
-  const [editingProject, setEditingProject] = useState(null)
-  const [deletingProject, setDeletingProject] = useState(null)
+  const [editingProject, setEditingProject] = useState(null);
+  const [deletingProject, setDeletingProject] = useState(null);
+
+  const hasActiveFilters =
+    Boolean(search) ||
+    Boolean(status) ||
+    Boolean(category) ||
+    Boolean(sort);
 
   function handleCreateProject(values) {
     createProjectMutation.mutate(values, {
       onSuccess: () => {
-        closeCreateModal()
+        closeCreateModal();
       },
-    })
+    });
   }
 
   function handleEditProject(values) {
     if (!editingProject) {
-      return
+      return;
     }
 
     updateProjectMutation.mutate(
@@ -61,18 +82,18 @@ function ProjectsPage() {
       },
       {
         onSuccess: () => {
-          setEditingProject(null)
+          setEditingProject(null);
         },
       },
-    )
+    );
   }
 
   function handleDeleteProject(projectId) {
     deleteProjectMutation.mutate(projectId, {
       onSuccess: () => {
-        setDeletingProject(null)
+        setDeletingProject(null);
       },
-    })
+    });
   }
 
   if (isLoading) {
@@ -80,7 +101,7 @@ function ProjectsPage() {
       <section className="page projects-page">
         <LoadingState message="Loading projects..." />
       </section>
-    )
+    );
   }
 
   if (isError) {
@@ -89,14 +110,10 @@ function ProjectsPage() {
         <ErrorState
           title="Unable to load projects"
           message={error.message}
-          action={
-            <Button onClick={() => refetch()}>
-              Try Again
-            </Button>
-          }
+          action={<Button onClick={() => refetch()}>Try Again</Button>}
         />
       </section>
-    )
+    );
   }
 
   return (
@@ -115,10 +132,44 @@ function ProjectsPage() {
         </Button>
       </div>
 
+      <ProjectFilters
+        search={search}
+        status={status}
+        category={category}
+        sort={sort}
+        onSearchChange={(value) =>
+          updateUrl({
+            search: value,
+            page: "1",
+          })
+        }
+        onStatusChange={(value) =>
+          updateUrl({
+            status: value,
+            page: "1",
+          })
+        }
+        onCategoryChange={(value) =>
+          updateUrl({
+            category: value,
+            page: "1",
+          })
+        }
+        onSortChange={(value) =>
+          updateUrl({
+            sort: value,
+            page: "1",
+          })
+        }
+        onClear={clearUrlState}
+        hasActiveFilters={hasActiveFilters}
+      />
+
       <ProjectList
         projects={projects}
         onEdit={setEditingProject}
         onDelete={setDeletingProject}
+        hasActiveFilters={hasActiveFilters}
       />
 
       {/* Create Project */}
@@ -168,13 +219,13 @@ function ProjectsPage() {
         message={
           deletingProject
             ? `Are you sure you want to delete ${deletingProject.name}?`
-            : ''
+            : ""
         }
         confirmLabel="Delete Project"
         isConfirming={deleteProjectMutation.isPending}
       />
     </section>
-  )
+  );
 }
 
-export default ProjectsPage
+export default ProjectsPage;

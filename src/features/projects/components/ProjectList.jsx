@@ -1,12 +1,25 @@
 import EmptyState from '../../../components/ui/EmptyState'
 import ProjectCard from './ProjectCard'
 
-function ProjectList({ projects, onEdit, onDelete }) {
+function ProjectList({
+  projects,
+  onEdit,
+  onDelete,
+  hasActiveFilters = false,
+}) {
   if (projects.length === 0) {
     return (
       <EmptyState
-        title="No projects yet"
-        message="Create your first project to get started."
+        title={
+          hasActiveFilters
+            ? 'No matching projects'
+            : 'No projects yet'
+        }
+        message={
+          hasActiveFilters
+            ? 'Try adjusting or clearing your filters.'
+            : 'Create your first project to get started.'
+        }
       />
     )
   }

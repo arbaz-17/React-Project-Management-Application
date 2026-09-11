@@ -3,10 +3,10 @@ import { useQuery } from '@tanstack/react-query'
 import { getProjects } from '../../../services/api/projectsApi'
 import { projectKeys } from '../utils/queryKeys'
 
-function useProjects() {
+function useProjects(filters = {}) {
   return useQuery({
-    queryKey: projectKeys.list(),
-    queryFn: getProjects,
+    queryKey: projectKeys.list(filters),
+    queryFn: () => getProjects(filters),
   })
 }
 

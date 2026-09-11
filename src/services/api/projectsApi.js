@@ -1,7 +1,32 @@
 import request from './apiClient'
 
-export function getProjects() {
-  return request('/projects')
+export function getProjects(filters = {}) {
+  const params = new URLSearchParams()
+
+  if (filters.search) {
+    params.set('search', filters.search)
+  }
+
+  if (filters.status) {
+    params.set('status', filters.status)
+  }
+
+  if (filters.category) {
+    params.set('category', filters.category)
+  }
+
+  if (filters.sort) {
+    const [sortBy, order] = filters.sort.split('-')
+
+    params.set('sortBy', sortBy)
+    params.set('order', order)
+  }
+
+  const queryString = params.toString()
+
+  return request(
+    queryString ? `/projects?${queryString}` : '/projects',
+  )
 }
 
 export function getProject(projectId) {
