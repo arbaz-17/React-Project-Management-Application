@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 
 import { getProjects } from '../../../services/api/projectsApi'
+
 import { projectKeys } from '../utils/queryKeys'
 
 function useProjects(filters = {}) {

@@ -1,6 +1,8 @@
 import request from './apiClient'
 
-export function getProjects(filters = {}) {
+export const PROJECTS_PER_PAGE = 6
+
+export async function getProjects(filters = {}) {
   const params = new URLSearchParams()
 
   if (filters.search) {
@@ -15,6 +17,13 @@ export function getProjects(filters = {}) {
     params.set('category', filters.category)
   }
 
+  if (filters.page) {
+    params.set('page', filters.page)
+  }
+
+  // Request one extra record to determine whether another page exists.
+  params.set('limit', String(PROJECTS_PER_PAGE + 1))
+
   if (filters.sort) {
     const [sortBy, order] = filters.sort.split('-')
 
@@ -24,9 +33,14 @@ export function getProjects(filters = {}) {
 
   const queryString = params.toString()
 
-  return request(
-    queryString ? `/projects?${queryString}` : '/projects',
-  )
+  const projects = await request(`/projects?${queryString}`)
+
+  const hasNextPage = projects.length > PROJECTS_PER_PAGE
+
+  return {
+    projects: projects.slice(0, PROJECTS_PER_PAGE),
+    hasNextPage,
+  }
 }
 
 export function getProject(projectId) {

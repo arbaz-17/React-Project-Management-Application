@@ -5,6 +5,7 @@ import Modal from "../components/ui/Modal";
 import ConfirmationDialog from "../components/ui/ConfirmationDialog";
 import LoadingState from "../components/ui/LoadingState";
 import ErrorState from "../components/ui/ErrorState";
+import Pagination from "../components/ui/Pagination";
 
 import ProjectForm from "../features/projects/components/ProjectForm";
 import ProjectList from "../features/projects/components/ProjectList";
@@ -26,12 +27,18 @@ function ProjectsPage() {
     status,
     category,
     sort,
+    page,
     updateUrl,
     clearUrlState,
   } = useProjectUrlState();
 
+  const currentPage = Math.max(Number(page) || 1, 1);
+
   const {
-    data: projects = [],
+    data: projectResponse = {
+      projects: [],
+      hasNextPage: false,
+    },
     isLoading,
     isError,
     error,
@@ -41,7 +48,11 @@ function ProjectsPage() {
     status,
     category,
     sort,
+    page: String(currentPage),
   });
+
+  const projects = projectResponse.projects;
+  const hasNextPage = projectResponse.hasNextPage;
 
   const createProjectMutation = useCreateProject();
   const updateProjectMutation = useUpdateProject();
@@ -93,6 +104,12 @@ function ProjectsPage() {
       onSuccess: () => {
         setDeletingProject(null);
       },
+    });
+  }
+
+  function handlePageChange(nextPage) {
+    updateUrl({
+      page: String(nextPage),
     });
   }
 
@@ -170,6 +187,12 @@ function ProjectsPage() {
         onEdit={setEditingProject}
         onDelete={setDeletingProject}
         hasActiveFilters={hasActiveFilters}
+      />
+
+      <Pagination
+        currentPage={currentPage}
+        hasNextPage={hasNextPage}
+        onPageChange={handlePageChange}
       />
 
       {/* Create Project */}
