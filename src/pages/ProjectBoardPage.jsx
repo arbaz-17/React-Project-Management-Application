@@ -1,29 +1,30 @@
-import { useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useState } from "react";
+import { Link, useParams } from "react-router-dom";
 
-import Button from '../components/ui/Button'
-import Modal from '../components/ui/Modal'
-import ConfirmationDialog from '../components/ui/ConfirmationDialog'
-import LoadingState from '../components/ui/LoadingState'
-import ErrorState from '../components/ui/ErrorState'
+import Button from "../components/ui/Button";
+import Modal from "../components/ui/Modal";
+import ConfirmationDialog from "../components/ui/ConfirmationDialog";
+import LoadingState from "../components/ui/LoadingState";
+import ErrorState from "../components/ui/ErrorState";
+import FetchingIndicator from "../components/ui/FetchingIndicator";
 
-import Board from '../features/board/components/Board'
-import BoardHeader from '../features/board/components/BoardHeader'
-import TaskForm from '../features/tasks/components/TaskForm'
+import Board from "../features/board/components/Board";
+import BoardHeader from "../features/board/components/BoardHeader";
+import TaskForm from "../features/tasks/components/TaskForm";
 
-import useDisclosure from '../hooks/useDisclosure'
+import useDisclosure from "../hooks/useDisclosure";
 
-import useProjectById from '../features/projects/hooks/useProjectById'
-import useProjectTasks from '../features/tasks/hooks/useProjectTasks'
+import useProjectById from "../features/projects/hooks/useProjectById";
+import useProjectTasks from "../features/tasks/hooks/useProjectTasks";
 
 import {
   useCreateTask,
   useUpdateTask,
   useDeleteTask,
-} from '../features/tasks/hooks/useTaskMutations'
+} from "../features/tasks/hooks/useTaskMutations";
 
 function ProjectBoardPage() {
-  const { projectId } = useParams()
+  const { projectId } = useParams();
 
   const {
     data: project,
@@ -31,28 +32,29 @@ function ProjectBoardPage() {
     isError: isProjectError,
     error: projectError,
     refetch: refetchProject,
-  } = useProjectById(projectId)
+  } = useProjectById(projectId);
 
   const {
     data: tasks = [],
     isLoading: isTasksLoading,
+    isFetching: isTasksFetching,
     isError: isTasksError,
     error: tasksError,
     refetch: refetchTasks,
-  } = useProjectTasks(projectId)
+  } = useProjectTasks(projectId);
 
-  const createTaskMutation = useCreateTask()
-  const updateTaskMutation = useUpdateTask()
-  const deleteTaskMutation = useDeleteTask()
+  const createTaskMutation = useCreateTask();
+  const updateTaskMutation = useUpdateTask();
+  const deleteTaskMutation = useDeleteTask();
 
   const {
     isOpen: isCreateModalOpen,
     open: openCreateModal,
     close: closeCreateModal,
-  } = useDisclosure()
+  } = useDisclosure();
 
-  const [editingTask, setEditingTask] = useState(null)
-  const [deletingTask, setDeletingTask] = useState(null)
+  const [editingTask, setEditingTask] = useState(null);
+  const [deletingTask, setDeletingTask] = useState(null);
 
   function handleCreateTask(values) {
     createTaskMutation.mutate(
@@ -62,53 +64,53 @@ function ProjectBoardPage() {
       },
       {
         onSuccess: () => {
-          closeCreateModal()
+          closeCreateModal();
         },
       },
-    )
+    );
   }
 
-function handleEditTask(values) {
-  if (!editingTask) {
-    return
+  function handleEditTask(values) {
+    if (!editingTask) {
+      return;
+    }
+
+    updateTaskMutation.mutate(
+      {
+        taskId: editingTask.id,
+        task: {
+          projectId,
+          ...values,
+        },
+      },
+      {
+        onSuccess: () => {
+          setEditingTask(null);
+        },
+      },
+    );
   }
 
-  updateTaskMutation.mutate(
-    {
-      taskId: editingTask.id,
-      task: {
+  function handleDeleteTask(taskId) {
+    deleteTaskMutation.mutate(
+      {
         projectId,
-        ...values,
+        taskId,
       },
-    },
-    {
-      onSuccess: () => {
-        setEditingTask(null)
+      {
+        onSuccess: () => {
+          setDeletingTask(null);
+        },
       },
-    },
-  )
-}
-
-function handleDeleteTask(taskId) {
-  deleteTaskMutation.mutate(
-    {
-      projectId,
-      taskId,
-    },
-    {
-      onSuccess: () => {
-        setDeletingTask(null)
-      },
-    },
-  )
-}
+    );
+  }
 
   if (isProjectLoading) {
     return (
       <section className="page project-board-page">
         <LoadingState message="Loading project..." />
       </section>
-    )
+    );
   }
 
   if (isProjectError) {
@@ -117,14 +119,10 @@ function handleDeleteTask(taskId) {
         <ErrorState
           title="Unable to load project"
           message={projectError.message}
-          action={
-            <Button onClick={() => refetchProject()}>
-              Try Again
-            </Button>
-          }
+          action={<Button onClick={() => refetchProject()}>Try Again</Button>}
         />
       </section>
-    )
+    );
   }
 
   if (!project) {
@@ -136,56 +134,44 @@ function handleDeleteTask(taskId) {
 
         <br />
 
-        <Link
-          to="/projects"
-          className="button button-primary button-medium"
-        >
+        <Link to="/projects" className="button button-primary button-medium">
           Back to Projects
         </Link>
       </section>
-    )
+    );
   }
 
   if (isTasksLoading) {
     return (
       <section className="page project-board-page">
-        <BoardHeader
-          project={project}
-          onAddTask={openCreateModal}
-        />
+        <BoardHeader project={project} onAddTask={openCreateModal} />
 
         <LoadingState message="Loading tasks..." />
       </section>
-    )
+    );
   }
 
   if (isTasksError) {
     return (
       <section className="page project-board-page">
-        <BoardHeader
-          project={project}
-          onAddTask={openCreateModal}
-        />
+        <BoardHeader project={project} onAddTask={openCreateModal} />
 
         <ErrorState
           title="Unable to load tasks"
           message={tasksError.message}
-          action={
-            <Button onClick={() => refetchTasks()}>
-              Try Again
-            </Button>
-          }
+          action={<Button onClick={() => refetchTasks()}>Try Again</Button>}
         />
       </section>
-    )
+    );
   }
 
   return (
     <section className="page project-board-page">
-      <BoardHeader
-        project={project}
-        onAddTask={openCreateModal}
-      />
+      <BoardHeader project={project} onAddTask={openCreateModal} />
+
+      {isTasksFetching && !isTasksLoading && (
+        <FetchingIndicator message="Updating tasks..." />
+      )}
 
       <Board
         tasks={tasks}
@@ -205,9 +191,7 @@ function handleDeleteTask(taskId) {
           onCancel={closeCreateModal}
           isSubmitting={createTaskMutation.isPending}
           serverError={
-            createTaskMutation.isError
-              ? createTaskMutation.error.message
-              : null
+            createTaskMutation.isError ? createTaskMutation.error.message : null
           }
         />
       </Modal>
@@ -245,13 +229,13 @@ function handleDeleteTask(taskId) {
         message={
           deletingTask
             ? `Are you sure you want to delete ${deletingTask.title}?`
-            : ''
+            : ""
         }
         confirmLabel="Delete Task"
         isConfirming={deleteTaskMutation.isPending}
       />
     </section>
-  )
+  );
 }
 
-export default ProjectBoardPage
+export default ProjectBoardPage;

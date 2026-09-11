@@ -6,6 +6,7 @@ import ConfirmationDialog from "../components/ui/ConfirmationDialog";
 import LoadingState from "../components/ui/LoadingState";
 import ErrorState from "../components/ui/ErrorState";
 import Pagination from "../components/ui/Pagination";
+import FetchingIndicator from "../components/ui/FetchingIndicator";
 
 import ProjectForm from "../features/projects/components/ProjectForm";
 import ProjectList from "../features/projects/components/ProjectList";
@@ -22,15 +23,8 @@ import {
 } from "../features/projects/hooks/useProjectMutations";
 
 function ProjectsPage() {
-  const {
-    search,
-    status,
-    category,
-    sort,
-    page,
-    updateUrl,
-    clearUrlState,
-  } = useProjectUrlState();
+  const { search, status, category, sort, page, updateUrl, clearUrlState } =
+    useProjectUrlState();
 
   const currentPage = Math.max(Number(page) || 1, 1);
 
@@ -41,6 +35,7 @@ function ProjectsPage() {
     },
     isLoading,
     isError,
+    isFetching,
     error,
     refetch,
   } = useProjects({
@@ -68,10 +63,7 @@ function ProjectsPage() {
   const [deletingProject, setDeletingProject] = useState(null);
 
   const hasActiveFilters =
-    Boolean(search) ||
-    Boolean(status) ||
-    Boolean(category) ||
-    Boolean(sort);
+    Boolean(search) || Boolean(status) || Boolean(category) || Boolean(sort);
 
   function handleCreateProject(values) {
     createProjectMutation.mutate(values, {
@@ -141,12 +133,18 @@ function ProjectsPage() {
           <p>Create and manage your projects.</p>
         </div>
 
-        <Button
-          onClick={openCreateModal}
-          disabled={createProjectMutation.isPending}
-        >
-          Create Project
-        </Button>
+        <div className="projects-page-header-actions">
+          {isFetching && !isLoading && (
+            <FetchingIndicator message="Updating projects..." />
+          )}
+
+          <Button
+            onClick={openCreateModal}
+            disabled={createProjectMutation.isPending}
+          >
+            Create Project
+          </Button>
+        </div>
       </div>
 
       <ProjectFilters

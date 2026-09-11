@@ -287,6 +287,12 @@
   justify-content: flex-end;
 }
 
+.projects-page-header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
 /* Responsive */
 
 @media (max-width: 960px) {
