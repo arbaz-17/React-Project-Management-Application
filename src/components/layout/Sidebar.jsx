@@ -18,13 +18,15 @@ function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="sidebar-brand">
-        <h2>
-          <span className="brand-accent"></span>
-          Mini Jira
-        </h2>
+        <span className="sidebar-logo" aria-hidden="true">
+          <FolderKanban size={16} />
+        </span>
+        <h2>Mini Jira</h2>
       </div>
 
       <nav className="sidebar-nav" aria-label="Main navigation">
+        <span className="sidebar-nav-label">Menu</span>
+
         {navigationItems.map((item) => {
           const Icon = item.icon
           return (

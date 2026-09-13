@@ -561,6 +561,47 @@
   }
 }
 
+/* Project card skeleton */
+
+.project-card-skeleton-title {
+  width: 60%;
+  height: 16px;
+}
+
+.project-card-skeleton-badge {
+  width: 64px;
+  height: 20px;
+  border-radius: var(--radius-sm);
+}
+
+.project-card-skeleton-lines {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  flex: 1;
+}
+
+.project-card-skeleton-line {
+  width: 100%;
+  height: 12px;
+}
+
+.project-card-skeleton-line-short {
+  width: 65%;
+}
+
+.project-card-skeleton-button {
+  width: 108px;
+  height: 30px;
+  border-radius: var(--radius-md);
+}
+
+.project-card-skeleton-button-sm {
+  width: 58px;
+  height: 26px;
+  border-radius: var(--radius-md);
+}
+
 /* Responsive */
 
 @media (max-width: 960px) {

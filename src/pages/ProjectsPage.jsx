@@ -3,7 +3,6 @@ import { useState } from "react";
 import Button from "../components/ui/Button";
 import Modal from "../components/ui/Modal";
 import ConfirmationDialog from "../components/ui/ConfirmationDialog";
-import LoadingState from "../components/ui/LoadingState";
 import ErrorState from "../components/ui/ErrorState";
 import Pagination from "../components/ui/Pagination";
 import FetchingIndicator from "../components/ui/FetchingIndicator";
@@ -105,26 +104,6 @@ function ProjectsPage() {
     });
   }
 
-  if (isLoading) {
-    return (
-      <section className="page projects-page">
-        <LoadingState message="Loading projects..." />
-      </section>
-    );
-  }
-
-  if (isError) {
-    return (
-      <section className="page projects-page">
-        <ErrorState
-          title="Unable to load projects"
-          message={error.message}
-          action={<Button onClick={() => refetch()}>Try Again</Button>}
-        />
-      </section>
-    );
-  }
-
   return (
     <section className="page projects-page">
       <div className="projects-page-header">
@@ -180,18 +159,29 @@ function ProjectsPage() {
         hasActiveFilters={hasActiveFilters}
       />
 
-      <ProjectList
-        projects={projects}
-        onEdit={setEditingProject}
-        onDelete={setDeletingProject}
-        hasActiveFilters={hasActiveFilters}
-      />
+      {isError ? (
+        <ErrorState
+          title="Unable to load projects"
+          message={error.message}
+          action={<Button onClick={() => refetch()}>Try Again</Button>}
+        />
+      ) : (
+        <ProjectList
+          projects={projects}
+          isLoading={isLoading}
+          onEdit={setEditingProject}
+          onDelete={setDeletingProject}
+          hasActiveFilters={hasActiveFilters}
+        />
+      )}
 
-      <Pagination
-        currentPage={currentPage}
-        hasNextPage={hasNextPage}
-        onPageChange={handlePageChange}
-      />
+      {!isLoading && !isError && (
+        <Pagination
+          currentPage={currentPage}
+          hasNextPage={hasNextPage}
+          onPageChange={handlePageChange}
+        />
+      )}
 
       {/* Create Project */}
       <Modal
