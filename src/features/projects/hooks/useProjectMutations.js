@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
 
 import {
   createProject,
@@ -18,6 +19,12 @@ function useCreateProject() {
       queryClient.invalidateQueries({
         queryKey: projectKeys.list(),
       })
+
+      toast.success('Project created successfully')
+    },
+
+    onError: (error) => {
+      toast.error(error.message || 'Failed to create project')
     },
   })
 }
@@ -38,6 +45,12 @@ function useUpdateProject() {
       queryClient.invalidateQueries({
         queryKey: projectKeys.list(),
       })
+
+      toast.success('Project updated successfully')
+    },
+
+    onError: (error) => {
+      toast.error(error.message || 'Failed to update project')
     },
   })
 }
@@ -56,6 +69,12 @@ function useDeleteProject() {
       queryClient.invalidateQueries({
         queryKey: projectKeys.list(),
       })
+
+      toast.success('Project deleted successfully')
+    },
+
+    onError: (error) => {
+      toast.error(error.message || 'Failed to delete project')
     },
   })
 }
