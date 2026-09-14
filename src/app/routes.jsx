@@ -1,7 +1,6 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { Navigate, createBrowserRouter } from 'react-router-dom'
 
 import AppLayout from '../components/layout/AppLayout'
-import DashboardPage from '../pages/DashboardPage'
 import NotFoundPage from '../pages/NotFoundPage'
 import ProjectBoardPage from '../pages/ProjectBoardPage'
 import ProjectsPage from '../pages/ProjectsPage'
@@ -14,7 +13,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <DashboardPage />,
+        element: <Navigate to="/projects" replace />,
       },
       {
         path: 'projects',
