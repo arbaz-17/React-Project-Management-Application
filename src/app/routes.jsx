@@ -1,4 +1,4 @@
-import { Navigate, createBrowserRouter } from 'react-router-dom'
+import { Navigate, createHashRouter } from 'react-router-dom'
 
 import AppLayout from '../components/layout/AppLayout'
 import NotFoundPage from '../pages/NotFoundPage'
@@ -6,7 +6,7 @@ import ProjectBoardPage from '../pages/ProjectBoardPage'
 import ProjectsPage from '../pages/ProjectsPage'
 import TaskDetailsPage from '../pages/TaskDetailsPage'
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: '/',
     element: <AppLayout />,
