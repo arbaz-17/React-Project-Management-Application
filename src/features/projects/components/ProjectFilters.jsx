@@ -4,21 +4,28 @@ import Input from "../../../components/ui/Input";
 import Select from "../../../components/ui/Select";
 import Button from "../../../components/ui/Button";
 
-const statusOptions = [
-  { value: "", label: "All statuses" },
-  { value: "ACTIVE", label: "Active" },
-  { value: "COMPLETED", label: "Completed" },
-  { value: "ARCHIVED", label: "Archived" },
-];
+import { PROJECT_STATUS_OPTIONS } from "../utils/projectConstants.js";
 
 const sortOptions = [
   { value: "", label: "Default" },
   { value: "name-asc", label: "Name (A–Z)" },
   { value: "name-desc", label: "Name (Z–A)" },
-  { value: "created-desc", label: "Newest first" },
-  { value: "created-asc", label: "Oldest first" },
-  { value: "updated-desc", label: "Recently updated" },
-  { value: "updated-asc", label: "Least recently updated" },
+  {
+    value: "created-desc",
+    label: "Newest first",
+  },
+  {
+    value: "created-asc",
+    label: "Oldest first",
+  },
+  {
+    value: "updated-desc",
+    label: "Recently updated",
+  },
+  {
+    value: "updated-asc",
+    label: "Least recently updated",
+  },
 ];
 
 function ProjectFilters({
@@ -35,12 +42,21 @@ function ProjectFilters({
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
+  const statusOptions = [
+    {
+      value: "",
+      label: "All statuses",
+    },
+    ...PROJECT_STATUS_OPTIONS,
+  ];
+
+  const activeFilterCount = [status, category, sort].filter(Boolean).length;
+
   return (
     <section
       className={`project-filters ${isOpen ? "project-filters-open" : ""}`}
       aria-label="Project filters"
     >
-      {/* Main toolbar */}
       <div className="project-filters-toolbar">
         <div className="project-filters-search">
           <Input
@@ -80,20 +96,14 @@ function ProjectFilters({
 
             <span>Filters</span>
 
-            {(() => {
-              const activeFilterCount = [status, category, sort].filter(
-                Boolean,
-              ).length;
-
-              return activeFilterCount > 0 ? (
-                <span
-                  className="project-filter-count"
-                  aria-label={`${activeFilterCount} active filters`}
-                >
-                  {activeFilterCount}
-                </span>
-              ) : null;
-            })()}
+            {activeFilterCount > 0 && (
+              <span
+                className="project-filter-count"
+                aria-label={`${activeFilterCount} active filters`}
+              >
+                {activeFilterCount}
+              </span>
+            )}
           </Button>
 
           {hasActiveFilters && (
@@ -109,7 +119,6 @@ function ProjectFilters({
         </div>
       </div>
 
-      {/* Expandable filter panel */}
       {isOpen && (
         <div className="project-filters-panel">
           <div className="project-filters-panel-grid">

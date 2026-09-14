@@ -4,14 +4,24 @@ function Button({
   variant = 'primary',
   size = 'medium',
   disabled = false,
-  onClick,
+  className = '',
+  ...props
 }) {
+  const buttonClassName = [
+    'button',
+    `button-${variant}`,
+    `button-${size}`,
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ')
+
   return (
     <button
       type={type}
-      className={`button button-${variant} button-${size}`}
+      className={buttonClassName}
       disabled={disabled}
-      onClick={onClick}
+      {...props}
     >
       {children}
     </button>

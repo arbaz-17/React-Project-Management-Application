@@ -77,11 +77,9 @@ function ProjectBoardPage() {
 
     updateTaskMutation.mutate(
       {
+        projectId,
         taskId: editingTask.id,
-        task: {
-          projectId,
-          ...values,
-        },
+        task: values,
       },
       {
         onSuccess: () => {

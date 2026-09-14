@@ -1,0 +1,26 @@
+export const PROJECT_STATUSES = {
+  ACTIVE: 'Active',
+  COMPLETED: 'Completed',
+  ARCHIVED: 'Archived',
+}
+
+export const PROJECT_STATUS_OPTIONS = [
+  {
+    value: PROJECT_STATUSES.ACTIVE,
+    label: PROJECT_STATUSES.ACTIVE,
+  },
+  {
+    value: PROJECT_STATUSES.COMPLETED,
+    label: PROJECT_STATUSES.COMPLETED,
+  },
+  {
+    value: PROJECT_STATUSES.ARCHIVED,
+    label: PROJECT_STATUSES.ARCHIVED,
+  },
+]
+
+export const PROJECT_STATUS_VARIANTS = {
+  [PROJECT_STATUSES.ACTIVE]: 'success',
+  [PROJECT_STATUSES.COMPLETED]: 'info',
+  [PROJECT_STATUSES.ARCHIVED]: 'default',
+}

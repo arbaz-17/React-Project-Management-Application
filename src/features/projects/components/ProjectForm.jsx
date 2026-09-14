@@ -1,9 +1,29 @@
-import { useState } from 'react'
+import { useState } from "react";
 
-import Button from '../../../components/ui/Button'
-import Input from '../../../components/ui/Input'
-import Textarea from '../../../components/ui/Textarea'
-import { validateProject } from '../../../utils/projectValidation.js'
+import Button from "../../../components/ui/Button";
+import Input from "../../../components/ui/Input";
+import Select from "../../../components/ui/Select";
+import Textarea from "../../../components/ui/Textarea";
+
+import {
+  PROJECT_STATUSES,
+  PROJECT_STATUS_OPTIONS,
+} from "../utils/projectConstants.js";
+
+import { validateProject } from "../utils/projectValidation";
+function getInitialStatus(initialStatus) {
+  if (!initialStatus) {
+    return PROJECT_STATUSES.ACTIVE
+  }
+
+  const normalizedStatus = String(initialStatus).toLowerCase()
+
+  const matchingStatus = Object.values(PROJECT_STATUSES).find(
+    (status) => status.toLowerCase() === normalizedStatus,
+  )
+
+  return matchingStatus ?? ''
+}
 
 function ProjectForm({
   initialValues,
@@ -17,7 +37,7 @@ function ProjectForm({
     name: initialValues?.name ?? '',
     description: initialValues?.description ?? '',
     category: initialValues?.category ?? '',
-    status: initialValues?.status ?? '',
+    status: getInitialStatus(initialValues?.status),
   })
 
   const [errors, setErrors] = useState({})
@@ -45,7 +65,7 @@ function ProjectForm({
       name: values.name.trim(),
       description: values.description.trim(),
       category: values.category.trim(),
-      status: values.status.trim(),
+      status: values.status,
     })
   }
 
@@ -91,14 +111,22 @@ function ProjectForm({
         disabled={isSubmitting}
       />
 
-      <Input
+      <Select
         id="project-status"
-        label="Status"
         name="status"
+        label="Status"
         value={values.status}
         onChange={handleChange}
-        placeholder="e.g. Active"
+        options={[
+          {
+            value: '',
+            label: 'Select status',
+          },
+          ...PROJECT_STATUS_OPTIONS,
+        ]}
+        required
         disabled={isSubmitting}
+        error={errors.status}
       />
 
       <div className="project-form-actions">
