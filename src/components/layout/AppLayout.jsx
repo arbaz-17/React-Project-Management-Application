@@ -1,43 +1,43 @@
-import { useEffect, useState } from 'react'
-import { Outlet } from 'react-router-dom'
+import { useEffect, useState } from "react";
+import { Outlet } from "react-router-dom";
 
-import Header from './Header'
-import PageContainer from './PageContainer'
-import Sidebar from './Sidebar'
+import Header from "./Header";
+import PageContainer from "./PageContainer";
+import Sidebar from "./Sidebar";
 
 function AppLayout() {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
-  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   function toggleSidebarCollapsed() {
-    setSidebarCollapsed((currentValue) => !currentValue)
+    setSidebarCollapsed((currentValue) => !currentValue);
   }
 
   function openMobileSidebar() {
-    setMobileSidebarOpen(true)
+    setMobileSidebarOpen(true);
   }
 
   function closeMobileSidebar() {
-    setMobileSidebarOpen(false)
+    setMobileSidebarOpen(false);
   }
 
   useEffect(() => {
     if (!mobileSidebarOpen) {
-      return undefined
+      return undefined;
     }
 
     function handleKeyDown(event) {
-      if (event.key === 'Escape') {
-        closeMobileSidebar()
+      if (event.key === "Escape") {
+        closeMobileSidebar();
       }
     }
 
-    document.addEventListener('keydown', handleKeyDown)
+    document.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [mobileSidebarOpen])
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [mobileSidebarOpen]);
 
   return (
     <div className="app-layout">
@@ -70,7 +70,7 @@ function AppLayout() {
         </PageContainer>
       </div>
     </div>
-  )
+  );
 }
 
-export default AppLayout
+export default AppLayout;
