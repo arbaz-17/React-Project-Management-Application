@@ -1,42 +1,61 @@
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams } from "react-router-dom";
 
-import Button from '../components/ui/Button'
-import Card from '../components/ui/Card'
-import LoadingState from '../components/ui/LoadingState'
-import ErrorState from '../components/ui/ErrorState'
+import Button from "../components/ui/Button";
+import Card from "../components/ui/Card";
+import LoadingState from "../components/ui/LoadingState";
+import ErrorState from "../components/ui/ErrorState";
 
-import AssigneeAvatar from '../features/tasks/components/AssigneeAvatar'
-import TaskPriorityBadge from '../features/tasks/components/TaskPriorityBadge'
-import TaskStatusBadge from '../features/tasks/components/TaskStatusBadge'
+import AssigneeAvatar from "../features/tasks/components/AssigneeAvatar";
+import TaskPriorityBadge from "../features/tasks/components/TaskPriorityBadge";
+import TaskStatusBadge from "../features/tasks/components/TaskStatusBadge";
 
-import useProjectById from '../features/projects/hooks/useProjectById'
-import useTaskById from '../features/tasks/hooks/useTaskById'
+import useProjectById from "../features/projects/hooks/useProjectById";
+import useTaskById from "../features/tasks/hooks/useTaskById";
 
 function TaskDetailsPage() {
-  const { projectId, taskId } = useParams()
+  const { projectId, taskId } = useParams();
 
   const {
     data: project,
     isLoading: isProjectLoading,
     isError: isProjectError,
     error: projectError,
-  } = useProjectById(projectId)
+    refetch: refetchProject,
+  } = useProjectById(projectId);
 
   const {
-  data: task,
-  isLoading: isTaskLoading,
-  isError: isTaskError,
-  error: taskError,
-  refetch: refetchTask,
-} = useTaskById(taskId)
-
+    data: task,
+    isLoading: isTaskLoading,
+    isError: isTaskError,
+    error: taskError,
+    refetch: refetchTask,
+  } = useTaskById(taskId);
 
   if (isProjectLoading || isTaskLoading) {
     return (
       <section className="page task-details-page">
         <LoadingState message="Loading task..." />
       </section>
-    )
+    );
+  }
+
+  if (isProjectError && projectError.status === 404) {
+    return (
+      <section className="page task-details-page">
+        <ErrorState
+          title="Project Not Found"
+          message="The project you're looking for doesn't exist."
+          action={
+            <Link
+              to="/projects"
+              className="button button-primary button-medium"
+            >
+              Back to Projects
+            </Link>
+          }
+        />
+      </section>
+    );
   }
 
   if (isProjectError) {
@@ -45,9 +64,14 @@ function TaskDetailsPage() {
         <ErrorState
           title="Unable to load project"
           message={projectError.message}
+          action={
+            <Button onClick={() => refetchProject()}>
+              Try Again
+            </Button>
+          }
         />
       </section>
-    )
+    );
   }
 
   if (!project) {
@@ -66,7 +90,26 @@ function TaskDetailsPage() {
           }
         />
       </section>
-    )
+    );
+  }
+
+  if (isTaskError && taskError.status === 404) {
+    return (
+      <section className="page task-details-page">
+        <ErrorState
+          title="Task Not Found"
+          message="The task you're looking for doesn't exist."
+          action={
+            <Link
+              to={`/projects/${projectId}`}
+              className="button button-primary button-medium"
+            >
+              Back to Board
+            </Link>
+          }
+        />
+      </section>
+    );
   }
 
   if (isTaskError) {
@@ -82,7 +125,7 @@ function TaskDetailsPage() {
           }
         />
       </section>
-    )
+    );
   }
 
   if (!task || task.projectId !== projectId) {
@@ -101,17 +144,14 @@ function TaskDetailsPage() {
           }
         />
       </section>
-    )
+    );
   }
 
   return (
     <section className="page task-details-page">
       <div className="task-details-header">
         <div>
-          <Link
-            to={`/projects/${projectId}`}
-            className="project-back-link"
-          >
+          <Link to={`/projects/${projectId}`} className="project-back-link">
             ← Back to Board
           </Link>
 
@@ -124,7 +164,7 @@ function TaskDetailsPage() {
           <h3>Description</h3>
 
           <p className="task-details-description">
-            {task.description || 'No description provided.'}
+            {task.description || "No description provided."}
           </p>
         </div>
 
@@ -149,7 +189,7 @@ function TaskDetailsPage() {
 
             <div className="task-detail-item">
               <span className="task-detail-label">Due Date</span>
-              <span>{task.dueDate || 'No due date'}</span>
+              <span>{task.dueDate || "No due date"}</span>
             </div>
           </div>
         </div>
@@ -164,31 +204,30 @@ function TaskDetailsPage() {
             </div>
 
             <div>
-              <span className="task-detail-label">
-                Last Updated
-              </span>
+              <span className="task-detail-label">Last Updated</span>
               <span>{formatDate(task.updatedAt)}</span>
             </div>
           </div>
         </div>
 
         <div className="task-details-actions">
-          <Link to={`/projects/${projectId}`}>
-            <Button variant="secondary">
-              Back to Board
-            </Button>
+          <Link
+            to={`/projects/${projectId}`}
+            className="button button-secondary button-medium"
+          >
+            Back to Board
           </Link>
         </div>
       </Card>
     </section>
-  )
+  );
 }
 
 function formatDate(dateString) {
-  return new Intl.DateTimeFormat('en-US', {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-  }).format(new Date(dateString))
+  return new Intl.DateTimeFormat("en-US", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date(dateString));
 }
 
-export default TaskDetailsPage
+export default TaskDetailsPage;

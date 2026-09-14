@@ -64,6 +64,16 @@ function ProjectsPage() {
   const hasActiveFilters =
     Boolean(search) || Boolean(status) || Boolean(category) || Boolean(sort);
 
+  function handleOpenCreateProject() {
+    createProjectMutation.reset();
+    openCreateModal();
+  }
+
+  function handleOpenEditProject(project) {
+    updateProjectMutation.reset();
+    setEditingProject(project);
+  }
+
   function handleCreateProject(values) {
     createProjectMutation.mutate(values, {
       onSuccess: () => {
@@ -118,7 +128,7 @@ function ProjectsPage() {
           )}
 
           <Button
-            onClick={openCreateModal}
+            onClick={handleOpenCreateProject}
             disabled={createProjectMutation.isPending}
           >
             Create Project
@@ -169,7 +179,7 @@ function ProjectsPage() {
         <ProjectList
           projects={projects}
           isLoading={isLoading}
-          onEdit={setEditingProject}
+          onEdit={handleOpenEditProject}
           onDelete={setDeletingProject}
           hasActiveFilters={hasActiveFilters}
         />

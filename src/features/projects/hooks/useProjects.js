@@ -1,4 +1,7 @@
-import { useQuery } from '@tanstack/react-query'
+import {
+  keepPreviousData,
+  useQuery,
+} from '@tanstack/react-query'
 
 import { getProjects } from '../../../services/api/projectsApi'
 
@@ -8,6 +11,7 @@ function useProjects(filters = {}) {
   return useQuery({
     queryKey: projectKeys.list(filters),
     queryFn: () => getProjects(filters),
+    placeholderData: keepPreviousData,
   })
 }
 

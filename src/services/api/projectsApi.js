@@ -33,13 +33,30 @@ export async function getProjects(filters = {}) {
 
   const queryString = params.toString()
 
-  const projects = await request(`/projects?${queryString}`)
+  try {
+    const projects = await request(
+      `/projects?${queryString}`,
+    )
 
-  const hasNextPage = projects.length > PROJECTS_PER_PAGE
+    const hasNextPage =
+      projects.length > PROJECTS_PER_PAGE
 
-  return {
-    projects: projects.slice(0, PROJECTS_PER_PAGE),
-    hasNextPage,
+    return {
+      projects: projects.slice(
+        0,
+        PROJECTS_PER_PAGE,
+      ),
+      hasNextPage,
+    }
+  } catch (error) {
+    if (error.status === 404) {
+      return {
+        projects: [],
+        hasNextPage: false,
+      }
+    }
+
+    throw error
   }
 }
 
@@ -60,7 +77,10 @@ export function createProject(project) {
   })
 }
 
-export function updateProject(projectId, project) {
+export function updateProject(
+  projectId,
+  project,
+) {
   return request(`/projects/${projectId}`, {
     method: 'PUT',
     body: JSON.stringify({

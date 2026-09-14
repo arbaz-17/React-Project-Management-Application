@@ -19,7 +19,9 @@ function ProjectList({
         aria-live="polite"
         aria-label="Loading projects"
       >
-        {Array.from({ length: PROJECTS_PER_PAGE }).map((_, index) => (
+        {Array.from({
+          length: PROJECTS_PER_PAGE,
+        }).map((_, index) => (
           <ProjectCardSkeleton key={index} />
         ))}
       </div>
@@ -29,10 +31,14 @@ function ProjectList({
   if (projects.length === 0) {
     return (
       <EmptyState
-        title={hasActiveFilters ? 'No matching projects' : 'No projects yet'}
+        title={
+          hasActiveFilters
+            ? 'No matching projects'
+            : 'No projects yet'
+        }
         message={
           hasActiveFilters
-            ? 'Try adjusting or clearing your filters.'
+            ? 'No projects match your current filters. Try adjusting them or create a new project.'
             : 'Create your first project to get started.'
         }
       />
