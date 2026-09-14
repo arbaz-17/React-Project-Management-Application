@@ -44,8 +44,11 @@ function useUpdateTask() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ taskId, task }) =>
-      updateTask(taskId, task),
+    mutationFn: ({ taskId, projectId, task }) =>
+      updateTask(taskId, {
+        projectId,
+        ...task,
+      }),
 
     async onMutate(variables) {
       const {
@@ -82,6 +85,7 @@ function useUpdateTask() {
               ? {
                   ...currentTask,
                   ...task,
+                  projectId,
                   updatedAt: new Date().toISOString(),
                 }
               : currentTask,
@@ -99,6 +103,7 @@ function useUpdateTask() {
           return {
             ...currentTask,
             ...task,
+            projectId,
             updatedAt: new Date().toISOString(),
           }
         },
@@ -154,7 +159,6 @@ function useUpdateTask() {
     },
   })
 }
-
 
 function useDeleteTask() {
   const queryClient = useQueryClient()

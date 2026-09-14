@@ -4,11 +4,11 @@ import { Link, useParams } from "react-router-dom";
 import Button from "../components/ui/Button";
 import Modal from "../components/ui/Modal";
 import ConfirmationDialog from "../components/ui/ConfirmationDialog";
-import LoadingState from "../components/ui/LoadingState";
 import ErrorState from "../components/ui/ErrorState";
 import FetchingIndicator from "../components/ui/FetchingIndicator";
 
 import Board from "../features/board/components/Board";
+import BoardSkeleton from "../features/board/components/BoardSkeleton";
 import BoardHeader from "../features/board/components/BoardHeader";
 import TaskForm from "../features/tasks/components/TaskForm";
 
@@ -56,6 +56,16 @@ function ProjectBoardPage() {
   const [editingTask, setEditingTask] = useState(null);
   const [deletingTask, setDeletingTask] = useState(null);
 
+  function handleOpenCreateTask() {
+    createTaskMutation.reset();
+    openCreateModal();
+  }
+
+  function handleOpenEditTask(task) {
+    updateTaskMutation.reset();
+    setEditingTask(task);
+  }
+
   function handleCreateTask(values) {
     createTaskMutation.mutate(
       {
@@ -77,11 +87,9 @@ function ProjectBoardPage() {
 
     updateTaskMutation.mutate(
       {
+        projectId,
         taskId: editingTask.id,
-        task: {
-          projectId,
-          ...values,
-        },
+        task: values,
       },
       {
         onSuccess: () => {
@@ -105,10 +113,21 @@ function ProjectBoardPage() {
     );
   }
 
-  if (isProjectLoading) {
+  if (isProjectError && projectError.status === 404) {
     return (
       <section className="page project-board-page">
-        <LoadingState message="Loading project..." />
+        <ErrorState
+          title="Project Not Found"
+          message="The project you're looking for doesn't exist."
+          action={
+            <Link
+              to="/projects"
+              className="button button-primary button-medium"
+            >
+              Back to Projects
+            </Link>
+          }
+        />
       </section>
     );
   }
@@ -116,50 +135,37 @@ function ProjectBoardPage() {
   if (isProjectError) {
     return (
       <section className="page project-board-page">
+        <Link to="/projects" className="project-back-link">
+          ← Back to Projects
+        </Link>
+
         <ErrorState
           title="Unable to load project"
           message={projectError.message}
-          action={<Button onClick={() => refetchProject()}>Try Again</Button>}
+          action={
+            <Button onClick={() => refetchProject()}>
+              Try Again
+            </Button>
+          }
         />
       </section>
     );
   }
 
-  if (!project) {
-    return (
-      <section className="page">
-        <h2>Project Not Found</h2>
-
-        <p>The project you're looking for doesn't exist.</p>
-
-        <br />
-
-        <Link to="/projects" className="button button-primary button-medium">
-          Back to Projects
-        </Link>
-      </section>
-    );
-  }
-
-  if (isTasksLoading) {
+  if (!isProjectLoading && !project) {
     return (
       <section className="page project-board-page">
-        <BoardHeader project={project} onAddTask={openCreateModal} />
-
-        <LoadingState message="Loading tasks..." />
-      </section>
-    );
-  }
-
-  if (isTasksError) {
-    return (
-      <section className="page project-board-page">
-        <BoardHeader project={project} onAddTask={openCreateModal} />
-
         <ErrorState
-          title="Unable to load tasks"
-          message={tasksError.message}
-          action={<Button onClick={() => refetchTasks()}>Try Again</Button>}
+          title="Project Not Found"
+          message="The project you're looking for doesn't exist."
+          action={
+            <Link
+              to="/projects"
+              className="button button-primary button-medium"
+            >
+              Back to Projects
+            </Link>
+          }
         />
       </section>
     );
@@ -167,17 +173,35 @@ function ProjectBoardPage() {
 
   return (
     <section className="page project-board-page">
-      <BoardHeader project={project} onAddTask={openCreateModal} />
+      <BoardHeader
+        project={project}
+        onAddTask={handleOpenCreateTask}
+        isLoading={isProjectLoading}
+      />
 
       {isTasksFetching && !isTasksLoading && (
         <FetchingIndicator message="Updating tasks..." />
       )}
 
-      <Board
-        tasks={tasks}
-        onEditTask={setEditingTask}
-        onDeleteTask={setDeletingTask}
-      />
+      {isTasksError ? (
+        <ErrorState
+          title="Unable to load tasks"
+          message={tasksError.message}
+          action={
+            <Button onClick={() => refetchTasks()}>
+              Try Again
+            </Button>
+          }
+        />
+      ) : isTasksLoading ? (
+        <BoardSkeleton />
+      ) : (
+        <Board
+          tasks={tasks}
+          onEditTask={handleOpenEditTask}
+          onDeleteTask={setDeletingTask}
+        />
+      )}
 
       {/* Create Task */}
       <Modal
@@ -191,7 +215,9 @@ function ProjectBoardPage() {
           onCancel={closeCreateModal}
           isSubmitting={createTaskMutation.isPending}
           serverError={
-            createTaskMutation.isError ? createTaskMutation.error.message : null
+            createTaskMutation.isError
+              ? createTaskMutation.error.message
+              : null
           }
         />
       </Modal>

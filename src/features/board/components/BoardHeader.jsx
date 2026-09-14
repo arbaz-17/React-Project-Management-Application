@@ -1,9 +1,7 @@
 import { Link } from 'react-router-dom'
-
-import Badge from '../../../components/ui/Badge'
 import Button from '../../../components/ui/Button'
 
-function BoardHeader({ project, onAddTask }) {
+function BoardHeader({ project, onAddTask, isLoading = false }) {
   return (
     <div className="project-board-header">
       <div>
@@ -11,15 +9,21 @@ function BoardHeader({ project, onAddTask }) {
           ← Back to Projects
         </Link>
 
-        <h2>{project.name}</h2>
+        {isLoading ? (
+          <span className="skeleton board-header-skeleton-title" />
+        ) : (
+          <h2>{project.name}</h2>
+        )}
 
-        <p>{project.description}</p>
+        {isLoading ? (
+          <span className="skeleton board-header-skeleton-description" />
+        ) : (
+          <p>{project.description}</p>
+        )}
       </div>
 
       <div className="project-board-header-actions">
-        <Badge variant="info">Project Board</Badge>
-
-        <Button onClick={onAddTask}>
+        <Button onClick={onAddTask} disabled={isLoading}>
           + Add Task
         </Button>
       </div>

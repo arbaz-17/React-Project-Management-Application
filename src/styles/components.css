@@ -392,3 +392,31 @@
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
+
+
+/* Skeleton (shared loading placeholder primitive) */
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.skeleton {
+  display: inline-block;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-border);
+  background-image: linear-gradient(
+    90deg,
+    var(--color-border) 0px,
+    var(--color-border-strong) 40px,
+    var(--color-border) 80px
+  );
+  background-size: 200px 100%;
+  background-repeat: no-repeat;
+  animation: skeleton-shimmer 1.6s ease-in-out infinite;
+}

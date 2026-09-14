@@ -1,9 +1,5 @@
 import request from './apiClient'
 
-export function getTasks() {
-  return request('/tasks')
-}
-
 export async function getTasksByProject(projectId) {
   try {
     return await request(

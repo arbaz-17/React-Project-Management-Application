@@ -17,14 +17,16 @@ function useCreateProject() {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: projectKeys.list(),
+        queryKey: projectKeys.lists(),
       })
 
       toast.success('Project created successfully')
     },
 
     onError: (error) => {
-      toast.error(error.message || 'Failed to create project')
+      toast.error(
+        error.message || 'Failed to create project',
+      )
     },
   })
 }
@@ -43,14 +45,16 @@ function useUpdateProject() {
       )
 
       queryClient.invalidateQueries({
-        queryKey: projectKeys.list(),
+        queryKey: projectKeys.lists(),
       })
 
       toast.success('Project updated successfully')
     },
 
     onError: (error) => {
-      toast.error(error.message || 'Failed to update project')
+      toast.error(
+        error.message || 'Failed to update project',
+      )
     },
   })
 }
@@ -67,14 +71,16 @@ function useDeleteProject() {
       })
 
       queryClient.invalidateQueries({
-        queryKey: projectKeys.list(),
+        queryKey: projectKeys.lists(),
       })
 
       toast.success('Project deleted successfully')
     },
 
     onError: (error) => {
-      toast.error(error.message || 'Failed to delete project')
+      toast.error(
+        error.message || 'Failed to delete project',
+      )
     },
   })
 }

@@ -2,7 +2,10 @@ import request from './apiClient'
 
 export const PROJECTS_PER_PAGE = 6
 
-export async function getProjects(filters = {}) {
+export async function getProjects(
+  filters = {},
+  options = {},
+) {
   const params = new URLSearchParams()
 
   if (filters.search) {
@@ -22,10 +25,14 @@ export async function getProjects(filters = {}) {
   }
 
   // Request one extra record to determine whether another page exists.
-  params.set('limit', String(PROJECTS_PER_PAGE + 1))
+  params.set(
+    'limit',
+    String(PROJECTS_PER_PAGE + 1),
+  )
 
   if (filters.sort) {
-    const [sortBy, order] = filters.sort.split('-')
+    const [sortBy, order] =
+      filters.sort.split('-')
 
     params.set('sortBy', sortBy)
     params.set('order', order)
@@ -33,13 +40,33 @@ export async function getProjects(filters = {}) {
 
   const queryString = params.toString()
 
-  const projects = await request(`/projects?${queryString}`)
+  try {
+    const projects = await request(
+      `/projects?${queryString}`,
+      {
+        signal: options.signal,
+      },
+    )
 
-  const hasNextPage = projects.length > PROJECTS_PER_PAGE
+    const hasNextPage =
+      projects.length > PROJECTS_PER_PAGE
 
-  return {
-    projects: projects.slice(0, PROJECTS_PER_PAGE),
-    hasNextPage,
+    return {
+      projects: projects.slice(
+        0,
+        PROJECTS_PER_PAGE,
+      ),
+      hasNextPage,
+    }
+  } catch (error) {
+    if (error.status === 404) {
+      return {
+        projects: [],
+        hasNextPage: false,
+      }
+    }
+
+    throw error
   }
 }
 
@@ -60,7 +87,10 @@ export function createProject(project) {
   })
 }
 
-export function updateProject(projectId, project) {
+export function updateProject(
+  projectId,
+  project,
+) {
   return request(`/projects/${projectId}`, {
     method: 'PUT',
     body: JSON.stringify({

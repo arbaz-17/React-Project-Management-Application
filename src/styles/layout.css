@@ -4,8 +4,9 @@
 
 .app-layout {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
   background: var(--color-bg);
+  overflow: hidden;
 }
 
 .app-main {
@@ -13,6 +14,8 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
+  height: 100vh;
+  overflow-y: auto;
 }
 
 .page-container {
@@ -34,16 +37,20 @@
 .sidebar {
   width: var(--sidebar-width);
   flex-shrink: 0;
+  height: 100vh;
   background: var(--color-charcoal);
   display: flex;
   flex-direction: column;
   padding: var(--space-5) var(--space-3);
+  overflow: hidden;
 }
 
 .sidebar-brand {
-  padding: var(--space-2) var(--space-3) var(--space-5);
+  flex-shrink: 0;
+  padding: var(--space-2) var(--space-3) var(--space-6);
   display: flex;
   align-items: center;
+  gap: var(--space-3);
 }
 
 .sidebar-brand h2 {
@@ -64,10 +71,37 @@
   display: inline-block;
 }
 
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-orange);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(255, 106, 44, 0.35);
+}
+
 .sidebar-nav {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-charcoal-soft) transparent;
+}
+
+.sidebar-nav::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+  background: var(--color-charcoal-soft);
+  border-radius: 999px;
 }
 
 .sidebar-link {
@@ -100,6 +134,9 @@
 /* Header */
 
 .header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
   height: var(--header-height);
   flex-shrink: 0;
   background: var(--color-surface);
@@ -162,16 +199,31 @@
 @media (max-width: 640px) {
   .app-layout {
     flex-direction: column;
+    height: auto;
+    overflow: visible;
+  }
+
+  .app-main {
+    height: auto;
+    overflow-y: visible;
   }
 
   .sidebar {
     width: 100%;
+    height: auto;
     flex-direction: row;
     align-items: center;
     padding: var(--space-3);
   }
 
   .sidebar-nav {
+    flex: initial;
     flex-direction: row;
+    overflow-y: visible;
+    overflow-x: auto;
+  }
+
+  .header {
+    position: static;
   }
 }
