@@ -1,12 +1,7 @@
-import { LayoutDashboard, FolderKanban } from 'lucide-react'
+import { FolderKanban } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 
 const navigationItems = [
-  {
-    label: 'Dashboard',
-    to: '/',
-    icon: LayoutDashboard,
-  },
   {
     label: 'Projects',
     to: '/projects',
@@ -21,6 +16,7 @@ function Sidebar() {
         <span className="sidebar-logo" aria-hidden="true">
           <FolderKanban size={16} />
         </span>
+
         <h2>PMS-Optimus Fox</h2>
       </div>
 
@@ -29,11 +25,11 @@ function Sidebar() {
 
         {navigationItems.map((item) => {
           const Icon = item.icon
+
           return (
             <NavLink
               key={item.to}
               to={item.to}
-              end={item.to === '/'}
               className={({ isActive }) =>
                 `sidebar-link ${isActive ? 'sidebar-link-active' : ''}`
               }
