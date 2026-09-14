@@ -35,15 +35,34 @@
   border-color: var(--color-border-strong);
 }
 
+.project-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
 .project-card-title-group {
   display: flex;
-  align-items: center;
-  gap: var(--space-2);
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.project-card-title-group h3 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .project-card-description {
   font-size: 13px;
+  color: var(--color-text-muted);
   flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .project-card-footer {
@@ -58,6 +77,18 @@
 .project-card-actions {
   display: flex;
   gap: var(--space-2);
+}
+
+.project-card-category {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.project-card-header .badge {
+  flex-shrink: 0;
 }
 
 .project-back-link {
@@ -561,11 +592,17 @@
   }
 }
 
+
 /* Project card skeleton */
 
 .project-card-skeleton-title {
-  width: 60%;
+  width: 70%;
   height: 16px;
+}
+
+.project-card-skeleton-category {
+  width: 40%;
+  height: 12px;
 }
 
 .project-card-skeleton-badge {
@@ -598,6 +635,71 @@
 
 .project-card-skeleton-button-sm {
   width: 58px;
+  height: 26px;
+  border-radius: var(--radius-md);
+}
+
+.board-header-skeleton-title {
+  display: block;
+  width: 200px;
+  height: 22px;
+}
+
+.board-header-skeleton-description {
+  display: block;
+  width: 280px;
+  height: 13px;
+  margin-top: var(--space-2);
+}
+
+.board-column-count-skeleton {
+  width: 22px;
+  height: 20px;
+  border-radius: var(--radius-sm);
+}
+
+
+/* Task card skeleton */
+
+.task-card-skeleton-title {
+  width: 65%;
+  height: 14px;
+}
+
+.task-card-skeleton-priority {
+  width: 54px;
+  height: 20px;
+  border-radius: var(--radius-sm);
+}
+
+.task-card-skeleton-lines {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.task-card-skeleton-line {
+  width: 100%;
+  height: 12px;
+}
+
+.task-card-skeleton-line-short {
+  width: 60%;
+}
+
+.task-card-skeleton-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.task-card-skeleton-name {
+  width: 64px;
+  height: 12px;
+}
+
+.task-card-skeleton-button {
+  width: 56px;
   height: 26px;
   border-radius: var(--radius-md);
 }

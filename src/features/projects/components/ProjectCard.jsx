@@ -4,14 +4,27 @@ import Badge from '../../../components/ui/Badge'
 import Button from '../../../components/ui/Button'
 import Card from '../../../components/ui/Card'
 
+const statusVariants = {
+  ACTIVE: 'success',
+  COMPLETED: 'info',
+  ARCHIVED: 'default',
+}
+
 function ProjectCard({ project, onEdit, onDelete }) {
   return (
     <Card className="project-card">
       <div className="project-card-header">
         <div className="project-card-title-group">
           <h3>{project.name}</h3>
-          <Badge variant="info">Project</Badge>
+
+          {project.category && (
+            <span className="project-card-category">{project.category}</span>
+          )}
         </div>
+
+        <Badge variant={statusVariants[project.status] ?? 'default'}>
+          {project.status || 'No Status'}
+        </Badge>
       </div>
 
       <p className="project-card-description">

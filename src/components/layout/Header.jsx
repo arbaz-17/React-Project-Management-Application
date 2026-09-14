@@ -8,8 +8,8 @@ function Header() {
   return (
     <header className="header">
       <div className="header-info">
-        <h1>Project Management</h1>
-        <p>Manage your projects and tasks</p>
+        <h1>React Project Management System - Optimus Fox</h1>
+        <p>Month 2 Project</p>
       </div>
 
       <button

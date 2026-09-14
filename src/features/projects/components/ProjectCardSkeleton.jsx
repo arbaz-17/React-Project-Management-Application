@@ -6,8 +6,10 @@ function ProjectCardSkeleton() {
       <div className="project-card-header">
         <div className="project-card-title-group">
           <span className="skeleton project-card-skeleton-title" />
-          <span className="skeleton project-card-skeleton-badge" />
+          <span className="skeleton project-card-skeleton-category" />
         </div>
+
+        <span className="skeleton project-card-skeleton-badge" />
       </div>
 
       <div className="project-card-skeleton-lines">

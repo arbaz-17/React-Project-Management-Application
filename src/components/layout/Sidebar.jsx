@@ -21,7 +21,7 @@ function Sidebar() {
         <span className="sidebar-logo" aria-hidden="true">
           <FolderKanban size={16} />
         </span>
-        <h2>Mini Jira</h2>
+        <h2>PMS-Optimus Fox</h2>
       </div>
 
       <nav className="sidebar-nav" aria-label="Main navigation">

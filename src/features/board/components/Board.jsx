@@ -1,13 +1,7 @@
 import { useMemo } from 'react'
 
 import BoardColumn from './BoardColumn'
-
-const columns = [
-  { id: 'BACKLOG', title: 'Backlog' },
-  { id: 'TODO', title: 'To Do' },
-  { id: 'IN_PROGRESS', title: 'In Progress' },
-  { id: 'DONE', title: 'Done' },
-]
+import { boardColumns } from './boardColumns.js'
 
 function Board({ tasks, onEditTask, onDeleteTask }) {
   const tasksByColumn = useMemo(() => {
@@ -29,7 +23,7 @@ function Board({ tasks, onEditTask, onDeleteTask }) {
 
   return (
     <div className="board">
-      {columns.map((column) => (
+      {boardColumns.map((column) => (
         <BoardColumn
           key={column.id}
           column={column}

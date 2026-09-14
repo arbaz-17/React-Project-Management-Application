@@ -4,11 +4,11 @@ import { Link, useParams } from "react-router-dom";
 import Button from "../components/ui/Button";
 import Modal from "../components/ui/Modal";
 import ConfirmationDialog from "../components/ui/ConfirmationDialog";
-import LoadingState from "../components/ui/LoadingState";
 import ErrorState from "../components/ui/ErrorState";
 import FetchingIndicator from "../components/ui/FetchingIndicator";
 
 import Board from "../features/board/components/Board";
+import BoardSkeleton from "../features/board/components/BoardSkeleton";
 import BoardHeader from "../features/board/components/BoardHeader";
 import TaskForm from "../features/tasks/components/TaskForm";
 
@@ -105,17 +105,13 @@ function ProjectBoardPage() {
     );
   }
 
-  if (isProjectLoading) {
-    return (
-      <section className="page project-board-page">
-        <LoadingState message="Loading project..." />
-      </section>
-    );
-  }
-
   if (isProjectError) {
     return (
       <section className="page project-board-page">
+        <Link to="/projects" className="project-back-link">
+          ← Back to Projects
+        </Link>
+
         <ErrorState
           title="Unable to load project"
           message={projectError.message}
@@ -125,7 +121,7 @@ function ProjectBoardPage() {
     );
   }
 
-  if (!project) {
+  if (!isProjectLoading && !project) {
     return (
       <section className="page">
         <h2>Project Not Found</h2>
@@ -141,43 +137,33 @@ function ProjectBoardPage() {
     );
   }
 
-  if (isTasksLoading) {
-    return (
-      <section className="page project-board-page">
-        <BoardHeader project={project} onAddTask={openCreateModal} />
-
-        <LoadingState message="Loading tasks..." />
-      </section>
-    );
-  }
-
-  if (isTasksError) {
-    return (
-      <section className="page project-board-page">
-        <BoardHeader project={project} onAddTask={openCreateModal} />
-
-        <ErrorState
-          title="Unable to load tasks"
-          message={tasksError.message}
-          action={<Button onClick={() => refetchTasks()}>Try Again</Button>}
-        />
-      </section>
-    );
-  }
-
   return (
     <section className="page project-board-page">
-      <BoardHeader project={project} onAddTask={openCreateModal} />
+      <BoardHeader
+        project={project}
+        onAddTask={openCreateModal}
+        isLoading={isProjectLoading}
+      />
 
       {isTasksFetching && !isTasksLoading && (
         <FetchingIndicator message="Updating tasks..." />
       )}
 
-      <Board
-        tasks={tasks}
-        onEditTask={setEditingTask}
-        onDeleteTask={setDeletingTask}
-      />
+      {isTasksError ? (
+        <ErrorState
+          title="Unable to load tasks"
+          message={tasksError.message}
+          action={<Button onClick={() => refetchTasks()}>Try Again</Button>}
+        />
+      ) : isTasksLoading ? (
+        <BoardSkeleton />
+      ) : (
+        <Board
+          tasks={tasks}
+          onEditTask={setEditingTask}
+          onDeleteTask={setDeletingTask}
+        />
+      )}
 
       {/* Create Task */}
       <Modal
