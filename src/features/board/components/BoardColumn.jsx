@@ -1,11 +1,29 @@
-import { memo } from 'react'
+import { memo } from "react";
+import { useDroppable } from "@dnd-kit/react";
 
-import Card from '../../../components/ui/Card'
-import TaskCard from '../../tasks/components/TaskCard'
+import TaskCard from "../../tasks/components/TaskCard";
 
-function BoardColumn({ column, tasks, onEdit, onDelete }) {
+function BoardColumn({
+  column,
+  tasks,
+  onEdit,
+  onDelete,
+  isDragDisabled = false,
+}) {
+  const { ref, isDropTarget } = useDroppable({
+    id: column.id,
+    accept: "task",
+  });
+
+  const className = [
+    "board-column",
+    isDropTarget ? "board-column-drop-target" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
-    <Card className="board-column">
+    <div ref={ref} className={className} aria-label={`${column.title} column`}>
       <div className="board-column-header">
         <h3>{column.title}</h3>
 
@@ -14,9 +32,7 @@ function BoardColumn({ column, tasks, onEdit, onDelete }) {
 
       <div className="board-column-content">
         {tasks.length === 0 ? (
-          <p className="board-column-empty">
-            No tasks in this column.
-          </p>
+          <p className="board-column-empty">No tasks in this column.</p>
         ) : (
           tasks.map((task) => (
             <TaskCard
@@ -24,12 +40,14 @@ function BoardColumn({ column, tasks, onEdit, onDelete }) {
               task={task}
               onEdit={onEdit}
               onDelete={onDelete}
+              draggable
+              dragDisabled={isDragDisabled}
             />
           ))
         )}
       </div>
-    </Card>
-  )
+    </div>
+  );
 }
 
-export default memo(BoardColumn)
+export default memo(BoardColumn);

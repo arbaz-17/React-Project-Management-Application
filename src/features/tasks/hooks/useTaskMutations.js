@@ -1,19 +1,16 @@
-import {
-  useMutation,
-  useQueryClient,
-} from '@tanstack/react-query'
-import { toast } from 'sonner'
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 import {
   createTask,
   updateTask,
   deleteTask,
-} from '../../../services/api/tasksApi'
+} from "../../../services/api/tasksApi";
 
-import { taskKeys } from '../utils/queryKeys'
+import { taskKeys } from "../utils/queryKeys";
 
 function useCreateTask() {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({ projectId, task }) =>
@@ -27,21 +24,24 @@ function useCreateTask() {
         queryKey: taskKeys.list({
           projectId: variables.projectId,
         }),
-      })
+      });
 
-      toast.success('Task created successfully')
+      toast.success("Task created successfully");
     },
 
     onError: (error) => {
-      toast.error(
-        error.message || 'Failed to create task',
-      )
+      toast.error(error.message || "Failed to create task");
     },
-  })
+  });
 }
 
-function useUpdateTask() {
-  const queryClient = useQueryClient()
+function useUpdateTask(options = {}) {
+  const {
+    showSuccessToast = true,
+    successMessage = "Task updated successfully",
+  } = options;
+
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({ taskId, projectId, task }) =>
@@ -51,99 +51,105 @@ function useUpdateTask() {
       }),
 
     async onMutate(variables) {
-      const {
-        taskId,
-        task,
+      const { taskId, task, projectId } = variables;
+
+      const projectTasksKey = taskKeys.list({
         projectId,
-      } = variables
+      });
 
-      await queryClient.cancelQueries({
-        queryKey: taskKeys.lists(),
-      })
+      const taskDetailKey = taskKeys.detail(taskId);
 
-      const previousTaskQueries =
-        queryClient.getQueriesData({
-          queryKey: taskKeys.lists(),
-        })
+      await Promise.all([
+        queryClient.cancelQueries({
+          queryKey: projectTasksKey,
+        }),
 
-      const previousTask =
-        queryClient.getQueryData(
-          taskKeys.detail(taskId),
-        )
+        queryClient.cancelQueries({
+          queryKey: taskDetailKey,
+        }),
+      ]);
 
-      queryClient.setQueriesData(
-        {
-          queryKey: taskKeys.lists(),
-        },
-        (currentTasks) => {
-          if (!Array.isArray(currentTasks)) {
-            return currentTasks
-          }
+      const previousTasks = queryClient.getQueryData(projectTasksKey);
 
-          return currentTasks.map((currentTask) =>
-            currentTask.id === taskId
-              ? {
-                  ...currentTask,
-                  ...task,
-                  projectId,
-                  updatedAt: new Date().toISOString(),
-                }
-              : currentTask,
-          )
-        },
-      )
+      const previousTask = queryClient.getQueryData(taskDetailKey);
 
-      queryClient.setQueryData(
-        taskKeys.detail(taskId),
-        (currentTask) => {
-          if (!currentTask) {
-            return currentTask
-          }
+      const optimisticUpdatedAt = new Date().toISOString();
 
-          return {
-            ...currentTask,
-            ...task,
-            projectId,
-            updatedAt: new Date().toISOString(),
-          }
-        },
-      )
+      queryClient.setQueryData(projectTasksKey, (currentTasks) => {
+        if (!Array.isArray(currentTasks)) {
+          return currentTasks;
+        }
+
+        return currentTasks.map((currentTask) =>
+          currentTask.id === taskId
+            ? {
+                ...currentTask,
+                ...task,
+                projectId,
+                updatedAt: optimisticUpdatedAt,
+              }
+            : currentTask,
+        );
+      });
+
+      queryClient.setQueryData(taskDetailKey, (currentTask) => {
+        if (!currentTask) {
+          return currentTask;
+        }
+
+        return {
+          ...currentTask,
+          ...task,
+          projectId,
+          updatedAt: optimisticUpdatedAt,
+        };
+      });
 
       return {
-        previousTaskQueries,
+        previousTasks,
         previousTask,
-      }
+        projectTasksKey,
+        taskDetailKey,
+      };
     },
 
-    onError: (error, variables, context) => {
+    onError: (error, _variables, context) => {
       if (context) {
-        context.previousTaskQueries.forEach(
-          ([queryKey, previousTasks]) => {
-            queryClient.setQueryData(
-              queryKey,
-              previousTasks,
-            )
-          },
-        )
+        if (context.previousTasks !== undefined) {
+          queryClient.setQueryData(
+            context.projectTasksKey,
+            context.previousTasks,
+          );
+        }
 
-        queryClient.setQueryData(
-          taskKeys.detail(variables.taskId),
-          context.previousTask,
-        )
+        if (context.previousTask !== undefined) {
+          queryClient.setQueryData(context.taskDetailKey, context.previousTask);
+        }
       }
 
-      toast.error(
-        error.message || 'Failed to update task',
-      )
+      toast.error(error.message || "Failed to update task");
     },
 
-    onSuccess: (updatedTask) => {
-      queryClient.setQueryData(
-        taskKeys.detail(updatedTask.id),
-        updatedTask,
-      )
+    onSuccess: (updatedTask, variables) => {
+      const projectTasksKey = taskKeys.list({
+        projectId: variables.projectId,
+      });
 
-      toast.success('Task updated successfully')
+      queryClient.setQueryData(projectTasksKey, (currentTasks) => {
+        if (!Array.isArray(currentTasks)) {
+          return currentTasks;
+        }
+
+        return currentTasks.map((currentTask) =>
+          currentTask.id === updatedTask.id ? updatedTask : currentTask,
+        );
+      });
+
+      queryClient.setQueryData(taskKeys.detail(updatedTask.id), updatedTask);
+
+      if (showSuccessToast) {
+        toast.success(successMessage);
+      }
     },
 
     onSettled: (_data, _error, variables) => {
@@ -151,46 +157,39 @@ function useUpdateTask() {
         queryKey: taskKeys.list({
           projectId: variables.projectId,
         }),
-      })
+      });
 
       queryClient.invalidateQueries({
         queryKey: taskKeys.detail(variables.taskId),
-      })
+      });
     },
-  })
+  });
 }
 
 function useDeleteTask() {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ taskId, projectId }) =>
-      deleteTask(taskId),
+    mutationFn: ({ taskId, projectId }) => deleteTask(taskId),
 
     onSuccess: (_, variables) => {
       queryClient.removeQueries({
         queryKey: taskKeys.detail(variables.taskId),
-      })
+      });
 
       queryClient.invalidateQueries({
         queryKey: taskKeys.list({
           projectId: variables.projectId,
         }),
-      })
+      });
 
-      toast.success('Task deleted successfully')
+      toast.success("Task deleted successfully");
     },
 
     onError: (error) => {
-      toast.error(
-        error.message || 'Failed to delete task',
-      )
+      toast.error(error.message || "Failed to delete task");
     },
-  })
+  });
 }
 
-export {
-  useCreateTask,
-  useUpdateTask,
-  useDeleteTask,
-}
+export { useCreateTask, useUpdateTask, useDeleteTask };

@@ -4,6 +4,7 @@ function Button({
   variant = 'primary',
   size = 'medium',
   disabled = false,
+  isLoading = false,
   className = '',
   ...props
 }) {
@@ -11,6 +12,7 @@ function Button({
     'button',
     `button-${variant}`,
     `button-${size}`,
+    isLoading ? 'button-loading' : '',
     className,
   ]
     .filter(Boolean)
@@ -20,10 +22,18 @@ function Button({
     <button
       type={type}
       className={buttonClassName}
-      disabled={disabled}
+      disabled={disabled || isLoading}
+      aria-busy={isLoading || undefined}
       {...props}
     >
-      {children}
+      {isLoading && (
+        <span
+          className="button-spinner"
+          aria-hidden="true"
+        />
+      )}
+
+      <span className="button-content">{children}</span>
     </button>
   )
 }

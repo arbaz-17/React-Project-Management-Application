@@ -44,7 +44,13 @@ function ProjectBoardPage() {
   } = useProjectTasks(projectId);
 
   const createTaskMutation = useCreateTask();
+
   const updateTaskMutation = useUpdateTask();
+
+  const moveTaskMutation = useUpdateTask({
+    showSuccessToast: false,
+  });
+
   const deleteTaskMutation = useDeleteTask();
 
   const {
@@ -54,6 +60,7 @@ function ProjectBoardPage() {
   } = useDisclosure();
 
   const [editingTask, setEditingTask] = useState(null);
+
   const [deletingTask, setDeletingTask] = useState(null);
 
   function handleOpenCreateTask() {
@@ -99,6 +106,21 @@ function ProjectBoardPage() {
     );
   }
 
+  function handleMoveTask(task, destinationStatus) {
+    if (moveTaskMutation.isPending) {
+      return;
+    }
+
+    moveTaskMutation.mutate({
+      projectId,
+      taskId: task.id,
+      task: {
+        ...task,
+        status: destinationStatus,
+      },
+    });
+  }
+
   function handleDeleteTask(taskId) {
     deleteTaskMutation.mutate(
       {
@@ -142,11 +164,7 @@ function ProjectBoardPage() {
         <ErrorState
           title="Unable to load project"
           message={projectError.message}
-          action={
-            <Button onClick={() => refetchProject()}>
-              Try Again
-            </Button>
-          }
+          action={<Button onClick={() => refetchProject()}>Try Again</Button>}
         />
       </section>
     );
@@ -187,11 +205,7 @@ function ProjectBoardPage() {
         <ErrorState
           title="Unable to load tasks"
           message={tasksError.message}
-          action={
-            <Button onClick={() => refetchTasks()}>
-              Try Again
-            </Button>
-          }
+          action={<Button onClick={() => refetchTasks()}>Try Again</Button>}
         />
       ) : isTasksLoading ? (
         <BoardSkeleton />
@@ -200,6 +214,8 @@ function ProjectBoardPage() {
           tasks={tasks}
           onEditTask={handleOpenEditTask}
           onDeleteTask={setDeletingTask}
+          onMoveTask={handleMoveTask}
+          isDragDisabled={moveTaskMutation.isPending}
         />
       )}
 
@@ -215,9 +231,7 @@ function ProjectBoardPage() {
           onCancel={closeCreateModal}
           isSubmitting={createTaskMutation.isPending}
           serverError={
-            createTaskMutation.isError
-              ? createTaskMutation.error.message
-              : null
+            createTaskMutation.isError ? createTaskMutation.error.message : null
           }
         />
       </Modal>

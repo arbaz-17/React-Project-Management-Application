@@ -124,6 +124,8 @@ function ProjectFilters({
             variant="secondary"
             size="medium"
             onClick={() => setIsOpen((previous) => !previous)}
+            aria-expanded={isOpen}
+            aria-controls="project-filters-panel"
           >
             <ListFilter size={16} aria-hidden="true" />
 
@@ -153,7 +155,7 @@ function ProjectFilters({
       </div>
 
       {isOpen && (
-        <div className="project-filters-panel">
+        <div id="project-filters-panel" className="project-filters-panel">
           <div className="project-filters-panel-grid">
             <div className="project-filter-field">
               <Select
