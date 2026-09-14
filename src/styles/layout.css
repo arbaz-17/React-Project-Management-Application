@@ -22,12 +22,18 @@
 
 .page-container {
   flex: 1;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+
   padding: var(--space-5);
+
   max-width: 1280px;
   width: 100%;
+
   margin: 0 auto;
 }
-
 .page {
   display: flex;
   flex-direction: column;
