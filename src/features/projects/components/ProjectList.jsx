@@ -38,7 +38,7 @@ function ProjectList({
         }
         message={
           hasActiveFilters
-            ? 'No projects match your current filters. Try adjusting them or create a new project.'
+            ? 'No projects match your current search or filters. Try changing your criteria.'
             : 'Create your first project to get started.'
         }
       />

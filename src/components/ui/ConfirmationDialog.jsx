@@ -1,5 +1,5 @@
-import Button from "./Button";
-import Modal from "./Modal";
+import Button from './Button'
+import Modal from './Modal'
 
 function ConfirmationDialog({
   isOpen,
@@ -25,7 +25,7 @@ function ConfirmationDialog({
         This action cannot be undone.
       </p>
 
-      <div className="confirmation-dialog-actions">
+      <div className="form-actions confirmation-dialog-actions">
         <Button
           variant="secondary"
           onClick={onClose}
@@ -37,7 +37,7 @@ function ConfirmationDialog({
         <Button
           variant="danger"
           onClick={onConfirm}
-          disabled={isConfirming}
+          isLoading={isConfirming}
         >
           {isConfirming ? 'Deleting...' : confirmLabel}
         </Button>
@@ -46,4 +46,4 @@ function ConfirmationDialog({
   )
 }
 
-export default ConfirmationDialog;
+export default ConfirmationDialog

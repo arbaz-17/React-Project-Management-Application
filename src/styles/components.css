@@ -2,45 +2,74 @@
    Components — shared UI primitives
    ========================================================= */
 
-/* Button */
+/* =========================================================
+   Button
+   ========================================================= */
 
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
+  min-width: 0;
   font-family: var(--font-sans);
   font-weight: 500;
+  line-height: 1;
   border-radius: var(--radius-md);
   border: 1px solid transparent;
   cursor: pointer;
   white-space: nowrap;
-  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+  user-select: none;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.1s ease;
 }
 
-.button:active {
+.button:hover:not(:disabled) {
+  text-decoration: none;
+}
+
+.button:active:not(:disabled) {
   transform: scale(0.98);
 }
 
+.button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 106, 44, 0.2);
+}
+
 .button:disabled {
-  opacity: 0.5;
+  opacity: 0.55;
   cursor: not-allowed;
   transform: none;
 }
 
+.button-content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
 .button-small {
+  height: 32px;
+  padding: 0 12px;
   font-size: 12px;
-  padding: 6px 12px;
 }
 
 .button-medium {
+  height: 40px;
+  padding: 0 16px;
   font-size: 14px;
-  padding: 9px 16px;
 }
 
 .button-large {
+  height: 46px;
+  padding: 0 20px;
   font-size: 15px;
-  padding: 12px 20px;
 }
 
 .button-primary {
@@ -74,7 +103,23 @@
   border-color: var(--color-danger);
 }
 
-/* Badge */
+.button-loading {
+  cursor: wait;
+}
+
+.button-spinner {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+/* =========================================================
+   Badge
+   ========================================================= */
 
 .badge {
   display: inline-flex;
@@ -120,7 +165,9 @@
   color: var(--color-success);
 }
 
-/* Avatar */
+/* =========================================================
+   Avatar
+   ========================================================= */
 
 .avatar {
   display: inline-flex;
@@ -158,7 +205,9 @@
   font-size: 16px;
 }
 
-/* Card */
+/* =========================================================
+   Card
+   ========================================================= */
 
 .card {
   background: var(--color-surface);
@@ -167,7 +216,9 @@
   padding: var(--space-4);
 }
 
-/* Forms */
+/* =========================================================
+   Forms
+   ========================================================= */
 
 .form-field {
   display: flex;
@@ -185,6 +236,7 @@
 .input,
 .select,
 .textarea {
+  width: 100%;
   font-family: var(--font-sans);
   font-size: 14px;
   color: var(--color-text);
@@ -192,8 +244,14 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   padding: 10px 12px;
-  width: 100%;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.input,
+.select {
+  min-height: 40px;
 }
 
 .textarea {
@@ -209,6 +267,13 @@
   box-shadow: 0 0 0 3px rgba(255, 106, 44, 0.15);
 }
 
+.input:disabled,
+.select:disabled,
+.textarea:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
 .input-error {
   border-color: var(--color-danger);
 }
@@ -218,21 +283,35 @@
 }
 
 .form-error {
+  margin: 0 0 var(--space-4);
   font-size: 12px;
   color: var(--color-danger);
-  margin: 0;
 }
 
-.confirmation-dialog-actions {
+/* Shared form/dialog action row */
+
+.form-actions {
   display: flex;
+  align-items: center;
   justify-content: flex-end;
   gap: var(--space-3);
-  margin-top: var(--space-4);
+  margin-top: var(--space-5);
+}
+
+.form-actions .button {
+  min-width: 108px;
+}
+
+/* Confirmation dialog */
+
+.confirmation-dialog-actions {
   padding-top: var(--space-4);
   border-top: 1px solid var(--color-border);
 }
 
-/* Modal */
+/* =========================================================
+   Modal
+   ========================================================= */
 
 .modal-overlay {
   position: fixed;
@@ -246,18 +325,26 @@
 }
 
 .modal {
-  background: var(--color-surface);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
   outline: none;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
 }
 
-.modal-small { max-width: 400px; }
-.modal-medium { max-width: 560px; }
-.modal-large { max-width: 760px; }
+.modal-small {
+  max-width: 400px;
+}
+
+.modal-medium {
+  max-width: 560px;
+}
+
+.modal-large {
+  max-width: 760px;
+}
 
 .modal-header {
   display: flex;
@@ -272,18 +359,18 @@
 }
 
 .modal-close {
-  border: none;
-  background: transparent;
-  font-size: 20px;
-  line-height: 1;
-  color: var(--color-text-muted);
-  cursor: pointer;
-  width: 28px;
-  height: 28px;
-  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
 }
 
 .modal-close:hover {
@@ -291,11 +378,18 @@
   color: var(--color-text);
 }
 
+.modal-close:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 106, 44, 0.2);
+}
+
 .modal-content {
   padding: var(--space-5);
 }
 
-/* Dropdown */
+/* =========================================================
+   Dropdown
+   ========================================================= */
 
 .dropdown {
   position: relative;
@@ -324,10 +418,17 @@
   z-index: 20;
 }
 
-.dropdown-menu-left { left: 0; }
-.dropdown-menu-right { right: 0; }
+.dropdown-menu-left {
+  left: 0;
+}
 
-/* Empty / Error / Loading states */
+.dropdown-menu-right {
+  right: 0;
+}
+
+/* =========================================================
+   Empty / Error / Loading states
+   ========================================================= */
 
 .empty-state,
 .error-state {
@@ -375,7 +476,6 @@
   animation: spin 0.7s linear infinite;
 }
 
-
 .fetching-indicator {
   display: inline-flex;
   align-items: center;
@@ -393,8 +493,9 @@
   animation: spin 0.7s linear infinite;
 }
 
-
-/* Skeleton (shared loading placeholder primitive) */
+/* =========================================================
+   Skeleton
+   ========================================================= */
 
 @keyframes skeleton-shimmer {
   0% {
@@ -419,4 +520,20 @@
   background-size: 200px 100%;
   background-repeat: no-repeat;
   animation: skeleton-shimmer 1.6s ease-in-out infinite;
+}
+
+/* =========================================================
+   Responsive shared form actions
+   ========================================================= */
+
+@media (max-width: 520px) {
+  .form-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .form-actions .button {
+    width: 100%;
+    min-width: 0;
+  }
 }

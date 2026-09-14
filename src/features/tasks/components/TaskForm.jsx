@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import { useState } from "react";
 
-import Button from '../../../components/ui/Button'
-import Input from '../../../components/ui/Input'
-import Select from '../../../components/ui/Select'
-import Textarea from '../../../components/ui/Textarea'
+import Button from "../../../components/ui/Button";
+import Input from "../../../components/ui/Input";
+import Select from "../../../components/ui/Select";
+import Textarea from "../../../components/ui/Textarea";
 
 import {
   TASK_PRIORITIES,
@@ -12,50 +12,48 @@ import {
   TASK_STATUS_OPTIONS,
   normalizeTaskPriority,
   normalizeTaskStatus,
-} from '../utils/taskConstants.js'
+} from "../utils/taskConstants.js";
 
-import { validateTask } from '../utils/taskValidation'
+import { validateTask } from "../utils/taskValidation";
 
 function TaskForm({
   initialValues,
   onSubmit,
   onCancel,
-  submitLabel = 'Create Task',
+  submitLabel = "Create Task",
   isSubmitting = false,
   serverError = null,
 }) {
   const [values, setValues] = useState({
-    title: initialValues?.title ?? '',
-    description: initialValues?.description ?? '',
-    status:
-      normalizeTaskStatus(initialValues?.status) ||
-      TASK_STATUSES.TODO,
+    title: initialValues?.title ?? "",
+    description: initialValues?.description ?? "",
+    status: normalizeTaskStatus(initialValues?.status) || TASK_STATUSES.TODO,
     priority:
-      normalizeTaskPriority(initialValues?.priority) ||
-      TASK_PRIORITIES.MEDIUM,
-    assignee: initialValues?.assignee ?? '',
-    dueDate: initialValues?.dueDate ?? '',
-  })
+      normalizeTaskPriority(initialValues?.priority) || TASK_PRIORITIES.MEDIUM,
+    assignee: initialValues?.assignee ?? "",
+    dueDate: initialValues?.dueDate ?? "",
+  });
 
-  const [errors, setErrors] = useState({})
+  const [errors, setErrors] = useState({});
 
   function handleChange(event) {
-    const { name, value } = event.target
+    const { name, value } = event.target;
 
     setValues((current) => ({
       ...current,
       [name]: value,
-    }))
+    }));
   }
 
   function handleSubmit(event) {
-    event.preventDefault()
+    event.preventDefault();
 
-    const validationErrors = validateTask(values)
-    setErrors(validationErrors)
+    const validationErrors = validateTask(values);
+
+    setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length > 0) {
-      return
+      return;
     }
 
     onSubmit({
@@ -65,19 +63,13 @@ function TaskForm({
       priority: values.priority,
       assignee: values.assignee.trim(),
       dueDate: values.dueDate || null,
-    })
+    });
   }
 
   return (
-    <form
-      className="task-form"
-      onSubmit={handleSubmit}
-    >
+    <form className="task-form" onSubmit={handleSubmit}>
       {serverError && (
-        <p
-          className="form-error"
-          role="alert"
-        >
+        <p className="form-error" role="alert">
           {serverError}
         </p>
       )}
@@ -157,25 +149,16 @@ function TaskForm({
       </div>
 
       <div className="form-actions">
-        <Button
-          variant="secondary"
-          onClick={onCancel}
-          disabled={isSubmitting}
-        >
+        <Button variant="secondary" onClick={onCancel} disabled={isSubmitting}>
           Cancel
         </Button>
 
-        <Button
-          type="submit"
-          disabled={isSubmitting}
-        >
-          {isSubmitting
-            ? 'Saving...'
-            : submitLabel}
+        <Button type="submit" isLoading={isSubmitting}>
+          {isSubmitting ? "Saving..." : submitLabel}
         </Button>
       </div>
     </form>
-  )
+  );
 }
 
-export default TaskForm
+export default TaskForm;

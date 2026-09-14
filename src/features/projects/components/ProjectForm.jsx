@@ -150,12 +150,12 @@ function ProjectForm({
         error={errors.status}
       />
 
-      <div className="project-form-actions">
+      <div className="form-actions">
         <Button variant="secondary" onClick={onCancel} disabled={isSubmitting}>
           Cancel
         </Button>
 
-        <Button type="submit" disabled={isSubmitting}>
+        <Button type="submit" isLoading={isSubmitting}>
           {isSubmitting ? "Saving..." : submitLabel}
         </Button>
       </div>

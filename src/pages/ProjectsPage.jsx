@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Plus } from "lucide-react";
 
 import Button from "../components/ui/Button";
 import Modal from "../components/ui/Modal";
@@ -117,9 +118,10 @@ function ProjectsPage() {
   return (
     <section className="page projects-page">
       <div className="projects-page-header">
-        <div>
+        <div className="projects-page-heading">
           <h2>Projects</h2>
-          <p>Create and manage your projects.</p>
+
+          <p>Create, organize, and manage your active project workspaces.</p>
         </div>
 
         <div className="projects-page-header-actions">
@@ -131,6 +133,7 @@ function ProjectsPage() {
             onClick={handleOpenCreateProject}
             disabled={createProjectMutation.isPending}
           >
+            <Plus size={17} aria-hidden="true" />
             Create Project
           </Button>
         </div>
@@ -169,31 +172,32 @@ function ProjectsPage() {
         hasActiveFilters={hasActiveFilters}
       />
 
-      {isError ? (
-        <ErrorState
-          title="Unable to load projects"
-          message={error.message}
-          action={<Button onClick={() => refetch()}>Try Again</Button>}
-        />
-      ) : (
-        <ProjectList
-          projects={projects}
-          isLoading={isLoading}
-          onEdit={handleOpenEditProject}
-          onDelete={setDeletingProject}
-          hasActiveFilters={hasActiveFilters}
-        />
-      )}
+      <div className="projects-page-content">
+        {isError ? (
+          <ErrorState
+            title="Unable to load projects"
+            message={error.message}
+            action={<Button onClick={() => refetch()}>Try Again</Button>}
+          />
+        ) : (
+          <ProjectList
+            projects={projects}
+            isLoading={isLoading}
+            onEdit={handleOpenEditProject}
+            onDelete={setDeletingProject}
+            hasActiveFilters={hasActiveFilters}
+          />
+        )}
 
-      {!isLoading && !isError && (
-        <Pagination
-          currentPage={currentPage}
-          hasNextPage={hasNextPage}
-          onPageChange={handlePageChange}
-        />
-      )}
+        {!isLoading && !isError && (
+          <Pagination
+            currentPage={currentPage}
+            hasNextPage={hasNextPage}
+            onPageChange={handlePageChange}
+          />
+        )}
+      </div>
 
-      {/* Create Project */}
       <Modal
         isOpen={isCreateModalOpen}
         onClose={closeCreateModal}
@@ -211,7 +215,6 @@ function ProjectsPage() {
         />
       </Modal>
 
-      {/* Edit Project */}
       <Modal
         isOpen={Boolean(editingProject)}
         onClose={() => setEditingProject(null)}
@@ -231,7 +234,6 @@ function ProjectsPage() {
         />
       </Modal>
 
-      {/* Delete Project */}
       <ConfirmationDialog
         isOpen={Boolean(deletingProject)}
         onClose={() => setDeletingProject(null)}
