@@ -123,4 +123,4 @@ The project follows a **feature/domain-oriented architecture**. Feature-specific
 ## Demo
 
 **Live Demo:**
-[Live Demo]()
+[Live Demo](https://arbaz-17.github.io/React-Project-Management-Application/)
