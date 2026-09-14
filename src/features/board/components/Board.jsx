@@ -3,18 +3,32 @@ import { useMemo } from 'react'
 import BoardColumn from './BoardColumn'
 import { boardColumns } from './boardColumns.js'
 
-function Board({ tasks, onEditTask, onDeleteTask }) {
+import {
+  TASK_STATUSES,
+  normalizeTaskStatus,
+} from '../../tasks/utils/taskConstants.js'
+
+function Board({
+  tasks,
+  onEditTask,
+  onDeleteTask,
+}) {
   const tasksByColumn = useMemo(() => {
     const groupedTasks = {
-      BACKLOG: [],
-      TODO: [],
-      IN_PROGRESS: [],
-      DONE: [],
+      [TASK_STATUSES.BACKLOG]: [],
+      [TASK_STATUSES.TODO]: [],
+      [TASK_STATUSES.IN_PROGRESS]: [],
+      [TASK_STATUSES.DONE]: [],
     }
 
     tasks.forEach((task) => {
-      if (groupedTasks[task.status]) {
-        groupedTasks[task.status].push(task)
+      const normalizedStatus =
+        normalizeTaskStatus(task.status)
+
+      if (groupedTasks[normalizedStatus]) {
+        groupedTasks[
+          normalizedStatus
+        ].push(task)
       }
     })
 
@@ -27,7 +41,9 @@ function Board({ tasks, onEditTask, onDeleteTask }) {
         <BoardColumn
           key={column.id}
           column={column}
-          tasks={tasksByColumn[column.id]}
+          tasks={
+            tasksByColumn[column.id]
+          }
           onEdit={onEditTask}
           onDelete={onDeleteTask}
         />

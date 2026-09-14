@@ -2,7 +2,10 @@ import request from './apiClient'
 
 export const PROJECTS_PER_PAGE = 6
 
-export async function getProjects(filters = {}) {
+export async function getProjects(
+  filters = {},
+  options = {},
+) {
   const params = new URLSearchParams()
 
   if (filters.search) {
@@ -22,10 +25,14 @@ export async function getProjects(filters = {}) {
   }
 
   // Request one extra record to determine whether another page exists.
-  params.set('limit', String(PROJECTS_PER_PAGE + 1))
+  params.set(
+    'limit',
+    String(PROJECTS_PER_PAGE + 1),
+  )
 
   if (filters.sort) {
-    const [sortBy, order] = filters.sort.split('-')
+    const [sortBy, order] =
+      filters.sort.split('-')
 
     params.set('sortBy', sortBy)
     params.set('order', order)
@@ -36,6 +43,9 @@ export async function getProjects(filters = {}) {
   try {
     const projects = await request(
       `/projects?${queryString}`,
+      {
+        signal: options.signal,
+      },
     )
 
     const hasNextPage =

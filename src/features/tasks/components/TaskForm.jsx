@@ -4,20 +4,17 @@ import Button from '../../../components/ui/Button'
 import Input from '../../../components/ui/Input'
 import Select from '../../../components/ui/Select'
 import Textarea from '../../../components/ui/Textarea'
+
+import {
+  TASK_PRIORITIES,
+  TASK_PRIORITY_OPTIONS,
+  TASK_STATUSES,
+  TASK_STATUS_OPTIONS,
+  normalizeTaskPriority,
+  normalizeTaskStatus,
+} from '../utils/taskConstants.js'
+
 import { validateTask } from '../utils/taskValidation'
-
-const statusOptions = [
-  { value: 'BACKLOG', label: 'Backlog' },
-  { value: 'TODO', label: 'To Do' },
-  { value: 'IN_PROGRESS', label: 'In Progress' },
-  { value: 'DONE', label: 'Done' },
-]
-
-const priorityOptions = [
-  { value: 'LOW', label: 'Low' },
-  { value: 'MEDIUM', label: 'Medium' },
-  { value: 'HIGH', label: 'High' },
-]
 
 function TaskForm({
   initialValues,
@@ -30,8 +27,12 @@ function TaskForm({
   const [values, setValues] = useState({
     title: initialValues?.title ?? '',
     description: initialValues?.description ?? '',
-    status: initialValues?.status ?? 'TODO',
-    priority: initialValues?.priority ?? 'MEDIUM',
+    status:
+      normalizeTaskStatus(initialValues?.status) ||
+      TASK_STATUSES.TODO,
+    priority:
+      normalizeTaskPriority(initialValues?.priority) ||
+      TASK_PRIORITIES.MEDIUM,
     assignee: initialValues?.assignee ?? '',
     dueDate: initialValues?.dueDate ?? '',
   })
@@ -68,9 +69,15 @@ function TaskForm({
   }
 
   return (
-    <form className="task-form" onSubmit={handleSubmit}>
+    <form
+      className="task-form"
+      onSubmit={handleSubmit}
+    >
       {serverError && (
-        <p className="form-error" role="alert">
+        <p
+          className="form-error"
+          role="alert"
+        >
           {serverError}
         </p>
       )}
@@ -106,7 +113,7 @@ function TaskForm({
           label="Status"
           value={values.status}
           onChange={handleChange}
-          options={statusOptions}
+          options={TASK_STATUS_OPTIONS}
           required
           disabled={isSubmitting}
           error={errors.status}
@@ -118,7 +125,7 @@ function TaskForm({
           label="Priority"
           value={values.priority}
           onChange={handleChange}
-          options={priorityOptions}
+          options={TASK_PRIORITY_OPTIONS}
           required
           disabled={isSubmitting}
           error={errors.priority}
@@ -162,7 +169,9 @@ function TaskForm({
           type="submit"
           disabled={isSubmitting}
         >
-          {isSubmitting ? 'Saving...' : submitLabel}
+          {isSubmitting
+            ? 'Saving...'
+            : submitLabel}
         </Button>
       </div>
     </form>

@@ -1,15 +1,32 @@
 import { useState } from "react";
+import { ListFilter } from "lucide-react";
 
 import Input from "../../../components/ui/Input";
 import Select from "../../../components/ui/Select";
 import Button from "../../../components/ui/Button";
 
-import { PROJECT_STATUS_OPTIONS } from "../utils/projectConstants.js";
+import useDebounce from "../../../hooks/useDebounce.js";
+
+import {
+  PROJECT_CATEGORY_OPTIONS,
+  PROJECT_STATUS_OPTIONS,
+} from "../utils/projectConstants.js";
+
+const SEARCH_DEBOUNCE_DELAY = 400;
 
 const sortOptions = [
-  { value: "", label: "Default" },
-  { value: "name-asc", label: "Name (A–Z)" },
-  { value: "name-desc", label: "Name (Z–A)" },
+  {
+    value: "",
+    label: "Default",
+  },
+  {
+    value: "name-asc",
+    label: "Name (A–Z)",
+  },
+  {
+    value: "name-desc",
+    label: "Name (Z–A)",
+  },
   {
     value: "created-desc",
     label: "Newest first",
@@ -27,6 +44,33 @@ const sortOptions = [
     label: "Least recently updated",
   },
 ];
+
+function ProjectSearch({ initialValue, onSearchChange }) {
+  const [searchInput, setSearchInput] = useState(initialValue);
+
+  const { debouncedCallback: debouncedSearchChange } = useDebounce(
+    onSearchChange,
+    SEARCH_DEBOUNCE_DELAY,
+  );
+
+  function handleSearchChange(event) {
+    const value = event.target.value;
+
+    setSearchInput(value);
+    debouncedSearchChange(value);
+  }
+
+  return (
+    <Input
+      id="project-search"
+      name="search"
+      label="Search projects"
+      value={searchInput}
+      onChange={handleSearchChange}
+      placeholder="Search projects..."
+    />
+  );
+}
 
 function ProjectFilters({
   search,
@@ -50,6 +94,14 @@ function ProjectFilters({
     ...PROJECT_STATUS_OPTIONS,
   ];
 
+  const categoryOptions = [
+    {
+      value: "",
+      label: "All categories",
+    },
+    ...PROJECT_CATEGORY_OPTIONS,
+  ];
+
   const activeFilterCount = [status, category, sort].filter(Boolean).length;
 
   return (
@@ -59,13 +111,10 @@ function ProjectFilters({
     >
       <div className="project-filters-toolbar">
         <div className="project-filters-search">
-          <Input
-            id="project-search"
-            name="search"
-            label="Search projects"
-            value={search}
-            onChange={(event) => onSearchChange(event.target.value)}
-            placeholder="Search projects..."
+          <ProjectSearch
+            key={search}
+            initialValue={search}
+            onSearchChange={onSearchChange}
           />
         </div>
 
@@ -76,23 +125,7 @@ function ProjectFilters({
             size="medium"
             onClick={() => setIsOpen((previous) => !previous)}
           >
-            <span className="project-filter-button-icon">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M4 6h16" />
-                <path d="M7 12h10" />
-                <path d="M10 18h4" />
-              </svg>
-            </span>
+            <ListFilter size={16} aria-hidden="true" />
 
             <span>Filters</span>
 
@@ -134,13 +167,13 @@ function ProjectFilters({
             </div>
 
             <div className="project-filter-field">
-              <Input
+              <Select
                 id="project-category-filter"
                 name="category"
                 label="Category"
                 value={category}
                 onChange={(event) => onCategoryChange(event.target.value)}
-                placeholder="e.g. Web Development"
+                options={categoryOptions}
               />
             </div>
 
