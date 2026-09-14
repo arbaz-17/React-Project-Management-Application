@@ -51,10 +51,6 @@ export async function getProjects(filters = {}, options = {}) {
 
   const projects = await getProjectsPage(filters, currentPage, options);
 
-  /*
-   * If fewer than six projects were returned, this is already
-   * the final page and no additional request is necessary.
-   */
   if (projects.length < PROJECTS_PER_PAGE) {
     return {
       projects,
@@ -62,12 +58,6 @@ export async function getProjects(filters = {}, options = {}) {
     };
   }
 
-  /*
-   * MockAPI uses `limit` when calculating page offsets.
-   * Keep the real page size at six and inspect the next
-   * real page instead of requesting seven records and
-   * discarding one.
-   */
   const nextPageProjects = await getProjectsPage(
     filters,
     currentPage + 1,
