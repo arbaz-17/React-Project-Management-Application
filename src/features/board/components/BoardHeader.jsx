@@ -1,12 +1,14 @@
 import { Link } from 'react-router-dom'
 import Button from '../../../components/ui/Button'
+import { ArrowLeft } from 'lucide-react'
 
 function BoardHeader({ project, onAddTask, isLoading = false }) {
   return (
     <div className="project-board-header">
       <div>
         <Link to="/projects" className="project-back-link">
-          ← Back to Projects
+        <ArrowLeft size={16} aria-hidden="true" />
+          Back to Projects
         </Link>
 
         {isLoading ? (
