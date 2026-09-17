@@ -60,7 +60,6 @@ function ProjectBoardPage() {
   } = useDisclosure();
 
   const [editingTask, setEditingTask] = useState(null);
-
   const [deletingTask, setDeletingTask] = useState(null);
 
   function handleOpenCreateTask() {
@@ -219,7 +218,6 @@ function ProjectBoardPage() {
         />
       )}
 
-      {/* Create Task */}
       <Modal
         isOpen={isCreateModalOpen}
         onClose={closeCreateModal}
@@ -236,7 +234,6 @@ function ProjectBoardPage() {
         />
       </Modal>
 
-      {/* Edit Task */}
       <Modal
         isOpen={Boolean(editingTask)}
         onClose={() => setEditingTask(null)}
@@ -260,7 +257,6 @@ function ProjectBoardPage() {
         )}
       </Modal>
 
-      {/* Delete Task */}
       <ConfirmationDialog
         isOpen={Boolean(deletingTask)}
         onClose={() => setDeletingTask(null)}

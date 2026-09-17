@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import { GripVertical } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useDraggable } from "@dnd-kit/react";
@@ -16,6 +16,14 @@ function TaskCard({
   draggable = false,
   dragDisabled = false,
 }) {
+  // I have added this to prove virtuallization
+  useEffect(() => {
+    console.log(`🟢 MOUNT ${task.id}: ${task.title}`);
+    return () => {
+      console.log(`🔴 UNMOUNT ${task.id}: ${task.title}`);
+    };
+  }, [task.id, task.title]);
+
   const { ref, handleRef, isDragging, isDropping } = useDraggable({
     id: `task:${task.id}`,
     type: "task",
