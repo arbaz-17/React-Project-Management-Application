@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 
 import Button from "../components/ui/Button";
 import Modal from "../components/ui/Modal";
@@ -145,6 +146,7 @@ function ProjectBoardPage() {
               to="/projects"
               className="button button-primary button-medium"
             >
+  
               Back to Projects
             </Link>
           }
@@ -157,7 +159,8 @@ function ProjectBoardPage() {
     return (
       <section className="page project-board-page">
         <Link to="/projects" className="project-back-link">
-          ← Back to Projects
+        <ArrowLeft size={16} aria-hidden="true" />
+          Back to Projects
         </Link>
 
         <ErrorState
