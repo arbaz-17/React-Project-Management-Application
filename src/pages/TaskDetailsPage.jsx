@@ -14,7 +14,7 @@ import AssigneeAvatar from '../features/tasks/components/AssigneeAvatar'
 import TaskDetailsSkeleton from '../features/tasks/components/TaskDetailsSkeleton'
 import TaskPriorityBadge from '../features/tasks/components/TaskPriorityBadge'
 import TaskStatusBadge from '../features/tasks/components/TaskStatusBadge'
-
+import { formatDate,formatDueDate } from '../utils/formatters'
 import useProjectById from '../features/projects/hooks/useProjectById'
 import useTaskById from '../features/tasks/hooks/useTaskById'
 
@@ -279,49 +279,6 @@ function TaskDetailsPage() {
       </Card>
     </section>
   )
-}
-
-function formatDate(dateString) {
-  if (!dateString) {
-    return 'Not available'
-  }
-
-  const date = new Date(dateString)
-
-  if (Number.isNaN(date.getTime())) {
-    return 'Not available'
-  }
-
-  return new Intl.DateTimeFormat('en-US', {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-  }).format(date)
-}
-
-function formatDueDate(dateString) {
-  if (!dateString) {
-    return 'No due date'
-  }
-
-  const dateParts = String(dateString)
-    .split('T')[0]
-    .split('-')
-    .map(Number)
-
-  if (
-    dateParts.length !== 3 ||
-    dateParts.some(Number.isNaN)
-  ) {
-    return 'No due date'
-  }
-
-  const [year, month, day] = dateParts
-
-  const date = new Date(year, month - 1, day)
-
-  return new Intl.DateTimeFormat('en-US', {
-    dateStyle: 'medium',
-  }).format(date)
 }
 
 export default TaskDetailsPage
