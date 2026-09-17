@@ -6,6 +6,8 @@ The `pages` folder contains route-level components. These pages compose shared U
 
 Pages mainly coordinate data loading, mutation flows, modal state, URL state, and route-specific error handling rather than owning reusable business logic.
 
+Route pages are lazy-loaded through `React.lazy` and rendered inside `Suspense` boundaries so page-level code is loaded only when needed.
+
 ## Main Pages
 
 ### `ProjectsPage.jsx`
@@ -36,8 +38,11 @@ Responsibilities:
 - Disables dragging while a move mutation is pending
 - Handles project/task loading and error states
 - Opens task forms and confirmation dialogs
+- Passes task data and interaction handlers into the reusable `Board`
 
 Task movement is delegated to the shared optimistic `useUpdateTask` mutation rather than being implemented directly in the page.
+
+Large-list rendering is handled lower in the board feature rather than in the page itself. `BoardColumn` conditionally uses virtualization for large task columns, keeping performance concerns colocated with the component that owns the scrollable list.
 
 ### `TaskDetailsPage.jsx`
 
@@ -61,7 +66,9 @@ Provides the fallback 404 page for unmatched application routes.
 ```text
 Router
   ↓
-Route Page
+Lazy-loaded Route Page
+  ↓
+Suspense fallback while loading
   ↓
 Read route / URL state
   ↓
@@ -78,4 +85,3 @@ Mutation hook
 Query cache updates
   ↓
 Page reflects latest state
-```

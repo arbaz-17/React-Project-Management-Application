@@ -10,7 +10,7 @@ It is organized into three areas:
 - `hooks/` — TanStack Query hooks for task queries and mutations
 - `utils/` — task constants, normalization, validation, and query-key helpers
 
-The task feature is also consumed by the Kanban board, where task cards can be moved between workflow statuses.
+The task feature is also consumed by the Kanban board, where task cards can be moved between workflow statuses and conditionally rendered through virtualization for large columns.
 
 ## Key Responsibilities
 
@@ -48,6 +48,10 @@ task:<taskId>
 ```
 
 The component is wrapped with `React.memo` to reduce unnecessary task-card re-renders during board interactions.
+
+A small development `useEffect` is also retained to log when task cards mount and unmount. This is used to demonstrate how virtualized board columns add and remove task-card components from the React tree as the user scrolls.
+
+The virtualization logic itself belongs to the board feature; `TaskCard` simply represents each rendered virtual item.
 
 #### `TaskForm.jsx`
 
@@ -199,5 +203,3 @@ Cache update / invalidation
           ↓
 UI refresh
 ```
-
-

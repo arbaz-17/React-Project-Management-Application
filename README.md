@@ -4,7 +4,7 @@ A Mini Jira / Trello-style project management application built with React as pa
 
 ## Overview
 
-This project demonstrates how a larger React application can be structured using reusable components, feature-based architecture, intentional state ownership, server-state management, URL-driven filters, accessible UI patterns, and performance-aware rendering.
+This project demonstrates how a larger React application can be structured using reusable components, feature-based architecture, intentional state ownership, server-state management, URL-driven filters, accessible UI patterns, and evidence-based performance optimization.
 
 The application allows users to create and manage projects, organize project tasks on a Kanban board, update task status through drag-and-drop, and view detailed task information.
 
@@ -23,6 +23,9 @@ The application currently includes:
 - Loading, fetching, empty, error, and not-found states
 - Reusable UI components
 - MockAPI-based server persistence
+- Route-level lazy loading and Suspense
+- Conditional task-column virtualization for large boards
+- Performance profiling and render analysis
 
 ## Key Features
 
@@ -38,12 +41,15 @@ The application currently includes:
 - **Responsive Layout** — collapsible desktop sidebar and mobile navigation
 - **Accessible UI** — keyboard behavior, ARIA attributes, focus-aware modal patterns, and semantic states
 - **User Feedback** — skeletons, background-fetch indicators, confirmation dialogs, and toast notifications
+- **Code Splitting** — route pages are loaded with `React.lazy` and displayed through `Suspense` fallbacks
+- **Conditional Virtualization** — large board columns use TanStack Virtual while normal-sized columns keep simple rendering
+- **Performance Validation** — React Profiler and Chrome Performance were used to evaluate re-renders and large-list rendering behavior
 
 ## Module Responsibilities
 
 | Module | Responsibility | Documentation |
 |---|---|---|
-| `app/` | Application setup, routing, providers, and TanStack Query configuration | [README](./src/app/README.md) |
+| `app/` | Application setup, routing, lazy page loading, providers, and TanStack Query configuration | [README](./src/app/README.md) |
 | `components/` | Shared UI primitives and application layout components | [README](./src/components/README.md) |
 | `context/` | Shared theme context and persistence | [README](./src/context/README.md) |
 | `features/` | Domain-oriented board, project, and task modules | [README](./src/features/README.md) |
@@ -79,8 +85,29 @@ The current implementation demonstrates:
 - Derived state
 - `React.memo`
 - Stable list keys
+- `React.lazy`
+- `Suspense`
+- Route-level code splitting
+- Virtualization / windowing
+- Viewport-based rendering
+- Overscan
+- Dynamic virtual-item measurement
 - Reusable loading / error / empty-state patterns
 - Accessible modal and navigation interactions
+
+## Performance Decisions
+
+Performance work was based on profiling rather than applying memoization automatically.
+
+ `React.memo`, `useMemo`, and `useCallback` usage was reviewed and retained only where it had a concrete purpose. Additional callback memoization was not added where profiling did not show a meaningful function-identity problem.
+
+Route-level pages are lazy-loaded to reduce the initial JavaScript needed for routes the user has not yet visited.
+
+Large board columns use conditional virtualization only when a column contains more than 40 tasks. Smaller columns continue using normal rendering to avoid unnecessary complexity.
+
+A synthetic 200-task benchmark was used to compare large-list performance. In Chrome Performance, the largest React-related rendering task decreased from approximately `747.5 ms` without virtualization to approximately `468.8 ms` with virtualization, a reduction of about `37%`.
+
+Virtualized drag-and-drop, scrolling, and task mount/unmount behavior were also manually tested to confirm that the optimization did not break board interactions.
 
 ## Project Structure
 
@@ -88,6 +115,7 @@ The current implementation demonstrates:
 src/
 ├── app/
 │   ├── App.jsx
+│   ├── lazyPages.jsx
 │   ├── queryClient.js
 │   └── routes.jsx
 ├── components/
@@ -114,6 +142,7 @@ The project follows a **feature/domain-oriented architecture**. Feature-specific
 - Vite
 - React Router
 - TanStack Query
+- TanStack Virtual
 - dnd-kit
 - Sonner
 - Lucide React
@@ -123,4 +152,5 @@ The project follows a **feature/domain-oriented architecture**. Feature-specific
 ## Demo
 
 **Live Demo:**
+
 [Live Demo](https://arbaz-17.github.io/React-Project-Management-Application/)

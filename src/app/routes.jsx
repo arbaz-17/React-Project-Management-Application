@@ -1,10 +1,17 @@
+import { Suspense } from 'react'
 import { Navigate, createHashRouter } from 'react-router-dom'
 
 import AppLayout from '../components/layout/AppLayout'
-import NotFoundPage from '../pages/NotFoundPage'
-import ProjectBoardPage from '../pages/ProjectBoardPage'
-import ProjectsPage from '../pages/ProjectsPage'
-import TaskDetailsPage from '../pages/TaskDetailsPage'
+import LoadingState from '../components/ui/LoadingState'
+
+import {
+  NotFoundPage,
+  ProjectBoardPage,
+  ProjectsPage,
+  TaskDetailsPage,
+} from './lazyPages'
+
+const routeFallback = <LoadingState message="Loading page..." />
 
 const router = createHashRouter([
   {
@@ -17,21 +24,37 @@ const router = createHashRouter([
       },
       {
         path: 'projects',
-        element: <ProjectsPage />,
+        element: (
+          <Suspense fallback={routeFallback}>
+            <ProjectsPage />
+          </Suspense>
+        ),
       },
       {
         path: 'projects/:projectId',
-        element: <ProjectBoardPage />,
+        element: (
+          <Suspense fallback={routeFallback}>
+            <ProjectBoardPage />
+          </Suspense>
+        ),
       },
       {
         path: 'projects/:projectId/tasks/:taskId',
-        element: <TaskDetailsPage />,
+        element: (
+          <Suspense fallback={routeFallback}>
+            <TaskDetailsPage />
+          </Suspense>
+        ),
       },
     ],
   },
   {
     path: '*',
-    element: <NotFoundPage />,
+    element: (
+      <Suspense fallback={routeFallback}>
+        <NotFoundPage />
+      </Suspense>
+    ),
   },
 ])
 

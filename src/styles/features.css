@@ -479,8 +479,6 @@
   gap: var(--space-2);
 }
 
-
-
 .task-title-link {
   font-weight: 500;
   color: var(--color-text);
@@ -549,12 +547,9 @@
 
 .task-card-heading {
   min-width: 0;
-
   display: flex;
   align-items: flex-start;
-
   gap: var(--space-2);
-
   flex: 1;
 }
 
@@ -565,29 +560,19 @@
 .task-card-drag-handle {
   width: 26px;
   height: 26px;
-
   flex-shrink: 0;
-
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
   margin-left: -5px;
   margin-top: -3px;
-
   padding: 0;
-
   border: none;
   border-radius: var(--radius-sm);
-
   background: transparent;
-
   color: var(--color-text-subtle);
-
   cursor: grab;
-
   touch-action: none;
-
   transition:
     color 0.15s ease,
     background-color 0.15s ease;
@@ -601,7 +586,6 @@
 .task-card-drag-handle:focus-visible {
   outline: 2px solid var(--color-orange);
   outline-offset: 2px;
-
   color: var(--color-orange);
 }
 
@@ -664,7 +648,6 @@
   flex-direction: column;
 
   gap: 0;
-
   padding: 0;
 
   overflow: hidden;
@@ -672,6 +655,10 @@
   background: var(--color-bg);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .board-column-header {
@@ -686,28 +673,23 @@
   padding: var(--space-3) var(--space-4);
 
   background: var(--color-surface);
-
   border-bottom: 1px solid var(--color-border);
 }
 
 .board-column-header h3 {
   font-size: 13px;
   font-weight: 600;
-
   text-transform: none;
-
   color: var(--color-text);
 }
 
 .board-column-count {
   min-width: 24px;
-
   padding: 2px 7px;
 
   text-align: center;
 
   background: var(--color-bg);
-
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
 
@@ -717,6 +699,13 @@
   font-weight: 600;
 }
 
+/*
+ * This element is the vertical scroll viewport used by
+ * TanStack Virtual for large board columns.
+ *
+ * For normal, non-virtualized columns it continues to act
+ * as a regular flex list with gap spacing.
+ */
 .board-column-content {
   flex: 1;
   min-height: 0;
@@ -746,6 +735,42 @@
   border-radius: 999px;
 }
 
+/*
+ * Virtualized list.
+ *
+ * TanStack Virtual calculates the total estimated/measured
+ * height of the column and this element creates that scroll
+ * space without rendering every TaskCard.
+ */
+.board-column-virtual-list {
+  position: relative;
+
+  width: 100%;
+  min-width: 0;
+
+  flex-shrink: 0;
+}
+
+/*
+ * Each rendered virtual item is positioned at the vertical
+ * offset calculated by TanStack Virtual.
+ *
+ * Padding-bottom reproduces the normal column gap and is also
+ * included when the virtualizer measures variable-height cards.
+ */
+.board-column-virtual-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  min-width: 0;
+
+  padding-bottom: var(--space-3);
+
+  box-sizing: border-box;
+}
+
 .board-column-empty {
   padding: var(--space-5) var(--space-2);
 
@@ -756,30 +781,20 @@
   font-size: 12px;
 }
 
-.board-column {
-  transition:
-    border-color 0.15s ease,
-    box-shadow 0.15s ease;
-}
-
 .board-column-drop-target {
   border-color: var(--color-orange);
 
-  box-shadow:
-    inset 0 0 0 1px
-    var(--color-orange);
+  box-shadow: inset 0 0 0 1px var(--color-orange);
 }
 
-.board-column-drop-target
-.board-column-header {
-  border-bottom-color:
-    var(--color-orange);
+.board-column-drop-target .board-column-header {
+  border-bottom-color: var(--color-orange);
 }
 
-.board-column-drop-target
-.board-column-content {
+.board-column-drop-target .board-column-content {
   background: var(--color-orange-soft);
 }
+
 /* =========================================================
    Task Details Page
    ========================================================= */
@@ -1088,7 +1103,6 @@
 }
 
 @media (max-width: 960px) {
-
   .task-details-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1196,7 +1210,6 @@
     padding: 0;
     justify-content: center;
   }
-
 
   .task-form-grid {
     grid-template-columns: 1fr;
