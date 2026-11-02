@@ -6,7 +6,6 @@ The `pages` folder contains route-level components. These pages compose shared U
 
 Pages mainly coordinate data loading, mutation flows, modal state, URL state, and route-specific error handling rather than owning reusable business logic.
 
-Route pages are lazy-loaded through `React.lazy` and rendered inside `Suspense` boundaries so page-level code is loaded only when needed.
 
 ## Main Pages
 
